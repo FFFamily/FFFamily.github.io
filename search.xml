@@ -1,182 +1,401 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>Hexo添加标签云</title>
-      <link href="/2020/01/04/exo%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%E4%BA%91/"/>
-      <url>/2020/01/04/exo%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%E4%BA%91/</url>
-      
-        <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>如何在菜单栏下添加标签云(next-7版本)</p><a id="more"></a><p>插件地址：<a href="https://github.com/MikeCoder/hexo-tag-cloud" target="_blank" rel="noopener">hexo-tag-cloud</a></p><hr><p>其他的就按照插件地址安装即可</p><p>但是值得注意的是！</p><p>1.说明文档中写的是先去添加一个依赖，再去下载，我尝试过，反正我是下不来</p><p>2.我的步骤是：先输入命令</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-tag-cloud</span><br></pre></td></tr></table></figure><p>这个时候你就会发现你的依赖里面已经多了一个，说明install成功</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;hexo-tag-cloud&quot;: &quot;^2.1.1&quot;,</span><br></pre></td></tr></table></figure><p>接着你就可以按着说明文档去给不同的版本去配置</p><br><blockquote><p>这里的依赖是指”dependencies”: {}大括号中的内容</p></blockquote>]]></content>
-      
-      
+<search>
+  <entry>
+    <title>Hexo添加标签云</title>
+    <url>/2020/01/04/exo%E6%B7%BB%E5%8A%A0%E6%A0%87%E7%AD%BE%E4%BA%91/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>如何在菜单栏下添加标签云(next-7版本)</p>
+<a id="more"></a>
+<p>插件地址：<a href="https://github.com/MikeCoder/hexo-tag-cloud" target="_blank" rel="noopener">hexo-tag-cloud</a></p>
+<hr>
+<p>其他的就按照插件地址安装即可</p>
+<p>但是值得注意的是！</p>
+<p>1.说明文档中写的是先去添加一个依赖，再去下载，我尝试过，反正我是下不来</p>
+<p>2.我的步骤是：先输入命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-tag-cloud</span><br></pre></td></tr></table></figure>
+<p>这个时候你就会发现你的依赖里面已经多了一个，说明install成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;hexo-tag-cloud&quot;: &quot;^2.1.1&quot;,</span><br></pre></td></tr></table></figure>
+<p>接着你就可以按着说明文档去给不同的版本去配置</p>
+<br>
+
+<blockquote>
+<p>这里的依赖是指”dependencies”: {}大括号中的内容</p>
+</blockquote>
+]]></content>
       <categories>
-          
-          <category> Hexo的使用 </category>
-          
+        <category>Hexo的使用</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 标签云 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>用本地md文件发布博客</title>
-      <link href="/2020/01/04/%E6%9C%AC%E5%9C%B0md%E6%96%87%E4%BB%B6%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2/"/>
-      <url>/2020/01/04/%E6%9C%AC%E5%9C%B0md%E6%96%87%E4%BB%B6%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2/</url>
-      
-        <content type="html"><![CDATA[<h2 id="如何将本地的md文件发布到HEXO上"><a href="#如何将本地的md文件发布到HEXO上" class="headerlink" title="如何将本地的md文件发布到HEXO上"></a>如何将本地的md文件发布到HEXO上</h2><a id="more"></a><p>第一步：将md文件复制到Hexo/source/_posts目录下</p><p>第二步：在md文件的最上方添加一下部分内容的内容</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: &#x2F;&#x2F;文章的名称</span><br><span class="line">tags: &#x2F;&#x2F;文章的标签</span><br><span class="line">categories: &#x2F;&#x2F;文章的分类</span><br><span class="line">author: &#x2F;&#x2F; 文章的作者</span><br><span class="line">date:  &#x2F;&#x2F; 写文章的时间</span><br></pre></td></tr></table></figure><p>第三步：一套流水线,然后就可以看到效果了</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
+      <tags>
+        <tag>标签云</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>用本地md文件发布博客</title>
+    <url>/2020/01/04/%E6%9C%AC%E5%9C%B0md%E6%96%87%E4%BB%B6%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h2 id="如何将本地的md文件发布到HEXO上"><a href="#如何将本地的md文件发布到HEXO上" class="headerlink" title="如何将本地的md文件发布到HEXO上"></a>如何将本地的md文件发布到HEXO上</h2><a id="more"></a>
+
+<p>第一步：将md文件复制到Hexo/source/_posts目录下</p>
+<p>第二步：在md文件的最上方添加一下部分内容的内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: &#x2F;&#x2F;文章的名称</span><br><span class="line">tags: &#x2F;&#x2F;文章的标签</span><br><span class="line">categories: &#x2F;&#x2F;文章的分类</span><br><span class="line">author: &#x2F;&#x2F; 文章的作者</span><br><span class="line">date:  &#x2F;&#x2F; 写文章的时间</span><br></pre></td></tr></table></figure>
+
+<p>第三步：一套流水线,然后就可以看到效果了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-          
-          <category> Hexo的使用 </category>
-          
+        <category>Hexo的使用</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> Hexo </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Redis基础学习</title>
-      <link href="/2020/01/04/Redis%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/"/>
-      <url>/2020/01/04/Redis%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</url>
-      
-        <content type="html"><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul><li>Redis概念</li><li>Redis使用</li><li>数据结构</li><li>命令操作<a id="more"></a></li></ul><hr><h2 id="Redis概念"><a href="#Redis概念" class="headerlink" title="Redis概念"></a>Redis概念</h2><p>Redis（全称：Remote Dictionary Server 远程字典服务）</p><ul><li><p>Redis是用C语言开发的一个开源的高性能键值对（key-value）数据库，官方提供测试数据，50个并发执行100000个请求,读的速度是110000次/s,写的速度是81000次/s ！</p></li><li><p>是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API</p></li></ul><blockquote><p><strong>总结：Redis是一款高性能的NOSQL系列的非关系型数据库</strong></p></blockquote><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>Redis通过提供多种键值数据类型，目前为止Redis支持的键值<strong>数据类型</strong>如下：</p><ol><li>字符串类型 string </li><li>哈希类型 hash </li><li>列表类型 list </li><li>集合类型 set </li><li>有序集合类型 sortedset</li></ol><h2 id="redis的应用场景"><a href="#redis的应用场景" class="headerlink" title="redis的应用场景"></a>redis的应用场景</h2><ul><li>缓存（数据查询、短连接、新闻内容、商品内容等等） </li><li>聊天室的在线好友列表 任务队列（秒杀、抢购、12306等等） </li><li>应用排行榜 </li><li>网站访问统计</li><li>数据过期处理（可以精确到毫秒 ）</li><li>分布式集群架构中的session分离</li></ul><h2 id="什么是NOSQL？"><a href="#什么是NOSQL？" class="headerlink" title="什么是NOSQL？"></a>什么是NOSQL？</h2><p>NoSQL(NoSQL = Not Only SQL)，即“不仅仅是SQL”</p><p><strong>是一项全新的数据库理念，泛指非关系型的数据库</strong></p><blockquote><p>随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站<br>特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，<br>暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展</p></blockquote><p><strong>NoSQL数据库的产生</strong>就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题</p><h3 id="NOSQL和关系型数据库比较"><a href="#NOSQL和关系型数据库比较" class="headerlink" title="NOSQL和关系型数据库比较"></a>NOSQL和关系型数据库比较</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol><li><strong>成本</strong>：nosql数据库基本都是开源软件，相比关系型数据库价格便宜(orille)</li><li><strong>查询速度</strong>：nosql数据库将数据存储于缓存之中，关系型数据库将数据存储在硬盘中，自然查询速度远不及nosql数据库</li><li><strong>存储数据的格式</strong>：nosql的存储格式是key,value形式（<strong>键值对</strong>）、文档形式、图片形式等等，所以可以存储基础类型以及对象或者是集合等各种格式，而数据库则只支持基础类型</li></ol><blockquote><p>NOSQL是基于键值对的，不需要经过SQL层的解析，所以性能非常高。</p></blockquote><ol start="4"><li><strong>扩展性</strong>：关系型数据库有类似join这样的多表查询机制(<strong>严格的模式限制</strong>)的限制导致扩展很艰难</li></ol><blockquote><p>NOSQL可扩展性同样也是因为基于键值对，数据之间没有耦合性，所以非常容易水平扩展。</p></blockquote><h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol><li><strong>维护的工具和资料有限</strong>，因为nosql是属于新的技术，不能和关系型数据库10几年的技术同日而语</li><li><strong>不提供对sql的支持</strong>，MySQL中使用的标准语言是SQL；而NoSQL中缺乏标准的查询语言</li><li><strong>不提供关系型数据库对事务的处理</strong>，sql复杂查询可以用SQL语句方便的在一个表以及多个表之间做非常复杂的数据查询。</li></ol><hr><blockquote><p>以上是自己通过视频的理解，更多可以参考<br><a href="https://blog.csdn.net/allen_a/article/details/50611966" target="_blank" rel="noopener">MySQL数据库与NoSQL数据库的区别</a><br><a href="https://www.php.cn/mysql-tutorials-418148.html" target="_blank" rel="noopener">nosql与mysql的区别是什么</a></p></blockquote><h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>两者通常情况下是：使用关系型数据库的同时，在适合使用NoSQL的时候使用NoSQL数据库，让NoSQL数据库对关系型数据库的不足进行弥补</p><p><strong>一般会将数据存储在关系型数据库中，在nosql数据库中备份存储关系型数据库的数据</strong></p><hr><h2 id="Redis的使用"><a href="#Redis的使用" class="headerlink" title="Redis的使用"></a>Redis的使用</h2><h3 id="1-建议中文网下载，国外的网站慢的很"><a href="#1-建议中文网下载，国外的网站慢的很" class="headerlink" title="1.建议中文网下载，国外的网站慢的很"></a>1.建议中文网下载，国外的网站慢的很</h3><p> <a href="http://www.redis.net.cn/" target="_blank" rel="noopener">Redis中文网</a></p><h3 id="2-解压直接可以使用"><a href="#2-解压直接可以使用" class="headerlink" title="2.解压直接可以使用"></a>2.解压直接可以使用</h3><h3 id="3-目录介绍"><a href="#3-目录介绍" class="headerlink" title="3.目录介绍"></a>3.目录介绍</h3><blockquote><ul><li>redis.windows.conf：配置文件         </li><li>redis-cli.exe：redis的客户端         </li><li>redis-server.exe：redis服务器端</li><li>redis-benchmark：性能测试工具</li><li>redis-check-aof：修复有问题的AOF文件</li><li>redis-check-dump：修复有问题的dump.rdb文件</li><li>redis-sentinel：redis集群使用</li></ul></blockquote><hr><h2 id="Redis命令"><a href="#Redis命令" class="headerlink" title="Redis命令"></a>Redis命令</h2><h3 id="字符串类型-string"><a href="#字符串类型-string" class="headerlink" title="字符串类型 string"></a>字符串类型 string</h3><ol><li>存储： set key value</li><li>获取： get key</li><li>删除： del key</li></ol><h3 id="哈希类型-hash"><a href="#哈希类型-hash" class="headerlink" title="哈希类型 hash"></a>哈希类型 hash</h3><ol><li><p>存储： hset key field value</p></li><li><p>获取：</p><ol><li>hget key field: 获取指定的field对应的值</li><li>hgetall key：获取所有的field和value</li></ol></li><li><p>删除： hdel key field</p></li></ol><h3 id="列表类型"><a href="#列表类型" class="headerlink" title="列表类型"></a>列表类型</h3><h3 id="list-可以添加一个元素到列表的头部（左边）或者尾部（右边）"><a href="#list-可以添加一个元素到列表的头部（左边）或者尾部（右边）" class="headerlink" title="list:可以添加一个元素到列表的头部（左边）或者尾部（右边）"></a>list:可以添加一个元素到列表的头部（左边）或者尾部（右边）</h3><ol><li>添加：<ol><li>lpush key value: 将元素加入列表左表</li><li>rpush key value：将元素加入列表右边</li></ol></li><li>获取：lrange key start end ：范围获取</li><li>删除：<ol><li>lpop key： 删除列表最左边的元素，并将元素返回</li><li>rpop key： 删除列表最右边的元素，并将元素返回</li></ol></li></ol><h3 id="集合类型-set-：-不允许重复元素"><a href="#集合类型-set-：-不允许重复元素" class="headerlink" title="集合类型 set ： 不允许重复元素"></a>集合类型 set ： 不允许重复元素</h3><ol><li>存储：sadd key value</li><li>获取：smembers key:获取set集合中所有元素</li><li>删除：srem key value:删除set集合中的某个元素    </li></ol><h3 id="有序集合类型-sortedset：不允许重复元素，且元素有顺序"><a href="#有序集合类型-sortedset：不允许重复元素，且元素有顺序" class="headerlink" title="有序集合类型 sortedset：不允许重复元素，且元素有顺序"></a>有序集合类型 sortedset：不允许重复元素，且元素有顺序</h3><p>每个元素都会关联一个double类型的分数<br>redis正是通过分数来为集合中的成员进行从小到大的排序。</p><ol><li>存储：zadd key score value</li><li>获取：zrange key start end [withscores]                </li><li>删除：zrem key value</li></ol><h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><pre><code>1. keys * : 查询所有的键2. type key ： 获取键对应的value的类型3. del key：删除指定的key value</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis基础学习</title>
+    <url>/2020/01/04/Redis%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>Redis概念</li>
+<li>Redis使用</li>
+<li>数据结构</li>
+<li>命令操作<a id="more"></a>
+
+</li>
+</ul>
+<hr>
+<h2 id="Redis概念"><a href="#Redis概念" class="headerlink" title="Redis概念"></a>Redis概念</h2><p>Redis（全称：Remote Dictionary Server 远程字典服务）</p>
+<ul>
+<li><p>Redis是用C语言开发的一个开源的高性能键值对（key-value）数据库，官方提供测试数据，50个并发执行100000个请求,读的速度是110000次/s,写的速度是81000次/s ！</p>
+</li>
+<li><p>是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>总结：Redis是一款高性能的NOSQL系列的非关系型数据库</strong></p>
+</blockquote>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>Redis通过提供多种键值数据类型，目前为止Redis支持的键值<strong>数据类型</strong>如下：</p>
+<ol>
+<li>字符串类型 string </li>
+<li>哈希类型 hash </li>
+<li>列表类型 list </li>
+<li>集合类型 set </li>
+<li>有序集合类型 sortedset</li>
+</ol>
+<h2 id="redis的应用场景"><a href="#redis的应用场景" class="headerlink" title="redis的应用场景"></a>redis的应用场景</h2><ul>
+<li>缓存（数据查询、短连接、新闻内容、商品内容等等） </li>
+<li>聊天室的在线好友列表 任务队列（秒杀、抢购、12306等等） </li>
+<li>应用排行榜 </li>
+<li>网站访问统计</li>
+<li>数据过期处理（可以精确到毫秒 ）</li>
+<li>分布式集群架构中的session分离</li>
+</ul>
+<h2 id="什么是NOSQL？"><a href="#什么是NOSQL？" class="headerlink" title="什么是NOSQL？"></a>什么是NOSQL？</h2><p>NoSQL(NoSQL = Not Only SQL)，即“不仅仅是SQL”</p>
+<p><strong>是一项全新的数据库理念，泛指非关系型的数据库</strong></p>
+<blockquote>
+<p>随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站<br>特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，<br>暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展</p>
+</blockquote>
+<p><strong>NoSQL数据库的产生</strong>就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题</p>
+<h3 id="NOSQL和关系型数据库比较"><a href="#NOSQL和关系型数据库比较" class="headerlink" title="NOSQL和关系型数据库比较"></a>NOSQL和关系型数据库比较</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li><strong>成本</strong>：nosql数据库基本都是开源软件，相比关系型数据库价格便宜(orille)</li>
+<li><strong>查询速度</strong>：nosql数据库将数据存储于缓存之中，关系型数据库将数据存储在硬盘中，自然查询速度远不及nosql数据库</li>
+<li><strong>存储数据的格式</strong>：nosql的存储格式是key,value形式（<strong>键值对</strong>）、文档形式、图片形式等等，所以可以存储基础类型以及对象或者是集合等各种格式，而数据库则只支持基础类型</li>
+</ol>
+<blockquote>
+<p>NOSQL是基于键值对的，不需要经过SQL层的解析，所以性能非常高。</p>
+</blockquote>
+<ol start="4">
+<li><strong>扩展性</strong>：关系型数据库有类似join这样的多表查询机制(<strong>严格的模式限制</strong>)的限制导致扩展很艰难</li>
+</ol>
+<blockquote>
+<p>NOSQL可扩展性同样也是因为基于键值对，数据之间没有耦合性，所以非常容易水平扩展。</p>
+</blockquote>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li><strong>维护的工具和资料有限</strong>，因为nosql是属于新的技术，不能和关系型数据库10几年的技术同日而语</li>
+<li><strong>不提供对sql的支持</strong>，MySQL中使用的标准语言是SQL；而NoSQL中缺乏标准的查询语言</li>
+<li><strong>不提供关系型数据库对事务的处理</strong>，sql复杂查询可以用SQL语句方便的在一个表以及多个表之间做非常复杂的数据查询。</li>
+</ol>
+<hr>
+<blockquote>
+<p>以上是自己通过视频的理解，更多可以参考<br><a href="https://blog.csdn.net/allen_a/article/details/50611966" target="_blank" rel="noopener">MySQL数据库与NoSQL数据库的区别</a><br><a href="https://www.php.cn/mysql-tutorials-418148.html" target="_blank" rel="noopener">nosql与mysql的区别是什么</a></p>
+</blockquote>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>两者通常情况下是：使用关系型数据库的同时，在适合使用NoSQL的时候使用NoSQL数据库，让NoSQL数据库对关系型数据库的不足进行弥补</p>
+<p><strong>一般会将数据存储在关系型数据库中，在nosql数据库中备份存储关系型数据库的数据</strong></p>
+<hr>
+<h2 id="Redis的使用"><a href="#Redis的使用" class="headerlink" title="Redis的使用"></a>Redis的使用</h2><h3 id="1-建议中文网下载，国外的网站慢的很"><a href="#1-建议中文网下载，国外的网站慢的很" class="headerlink" title="1.建议中文网下载，国外的网站慢的很"></a>1.建议中文网下载，国外的网站慢的很</h3><p> <a href="http://www.redis.net.cn/" target="_blank" rel="noopener">Redis中文网</a></p>
+<h3 id="2-解压直接可以使用"><a href="#2-解压直接可以使用" class="headerlink" title="2.解压直接可以使用"></a>2.解压直接可以使用</h3><h3 id="3-目录介绍"><a href="#3-目录介绍" class="headerlink" title="3.目录介绍"></a>3.目录介绍</h3><blockquote>
+<ul>
+<li>redis.windows.conf：配置文件         </li>
+<li>redis-cli.exe：redis的客户端         </li>
+<li>redis-server.exe：redis服务器端</li>
+<li>redis-benchmark：性能测试工具</li>
+<li>redis-check-aof：修复有问题的AOF文件</li>
+<li>redis-check-dump：修复有问题的dump.rdb文件</li>
+<li>redis-sentinel：redis集群使用</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="Redis命令"><a href="#Redis命令" class="headerlink" title="Redis命令"></a>Redis命令</h2><h3 id="字符串类型-string"><a href="#字符串类型-string" class="headerlink" title="字符串类型 string"></a>字符串类型 string</h3><ol>
+<li>存储： set key value</li>
+<li>获取： get key</li>
+<li>删除： del key</li>
+</ol>
+<h3 id="哈希类型-hash"><a href="#哈希类型-hash" class="headerlink" title="哈希类型 hash"></a>哈希类型 hash</h3><ol>
+<li><p>存储： hset key field value</p>
+</li>
+<li><p>获取：</p>
+<ol>
+<li>hget key field: 获取指定的field对应的值</li>
+<li>hgetall key：获取所有的field和value</li>
+</ol>
+</li>
+<li><p>删除： hdel key field</p>
+</li>
+</ol>
+<h3 id="列表类型"><a href="#列表类型" class="headerlink" title="列表类型"></a>列表类型</h3><h3 id="list-可以添加一个元素到列表的头部（左边）或者尾部（右边）"><a href="#list-可以添加一个元素到列表的头部（左边）或者尾部（右边）" class="headerlink" title="list:可以添加一个元素到列表的头部（左边）或者尾部（右边）"></a>list:可以添加一个元素到列表的头部（左边）或者尾部（右边）</h3><ol>
+<li>添加：<ol>
+<li>lpush key value: 将元素加入列表左表</li>
+<li>rpush key value：将元素加入列表右边</li>
+</ol>
+</li>
+<li>获取：lrange key start end ：范围获取</li>
+<li>删除：<ol>
+<li>lpop key： 删除列表最左边的元素，并将元素返回</li>
+<li>rpop key： 删除列表最右边的元素，并将元素返回</li>
+</ol>
+</li>
+</ol>
+<h3 id="集合类型-set-：-不允许重复元素"><a href="#集合类型-set-：-不允许重复元素" class="headerlink" title="集合类型 set ： 不允许重复元素"></a>集合类型 set ： 不允许重复元素</h3><ol>
+<li>存储：sadd key value</li>
+<li>获取：smembers key:获取set集合中所有元素</li>
+<li>删除：srem key value:删除set集合中的某个元素    </li>
+</ol>
+<h3 id="有序集合类型-sortedset：不允许重复元素，且元素有顺序"><a href="#有序集合类型-sortedset：不允许重复元素，且元素有顺序" class="headerlink" title="有序集合类型 sortedset：不允许重复元素，且元素有顺序"></a>有序集合类型 sortedset：不允许重复元素，且元素有顺序</h3><p>每个元素都会关联一个double类型的分数<br>redis正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<ol>
+<li>存储：zadd key score value</li>
+<li>获取：zrange key start end [withscores]                </li>
+<li>删除：zrem key value</li>
+</ol>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><pre><code>1. keys * : 查询所有的键
+2. type key ： 获取键对应的value的类型
+3. del key：删除指定的key value</code></pre>]]></content>
       <categories>
-          
-          <category> Redis </category>
-          
+        <category>Redis</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> Redis </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>使用Hexo Admin 发布文章</title>
-      <link href="/2019/12/31/hello-world/"/>
-      <url>/2019/12/31/hello-world/</url>
-      
-        <content type="html"><![CDATA[<h3 id="Hexo-Admin"><a href="#Hexo-Admin" class="headerlink" title=" Hexo Admin"></a><center><font face="Cooper Black"> Hexo Admin</font></center></h3><a id="more"></a><center><font face="华文行楷">第一次尝试使用Hexo Admin发布文章，也是第一次在Hexo上面发布文章</font></center><br><h4 id="具体实现方式"><a href="#具体实现方式" class="headerlink" title="具体实现方式"></a><center><font face="华文行楷">具体实现方式</font></center></h4><p><font face="华文行楷">一：在Hexo网站目录下，安装 Hexo Admin 插件</font></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-admin</span><br></pre></td></tr></table></figure><p><font face="华文行楷">二：启动服务</font></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure><p><font face="华文行楷">三：访问网址</font></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:4000&#x2F;admin&#x2F;</span><br></pre></td></tr></table></figure><p><font face="华文行楷">四：在线编辑</font></p>]]></content>
-      
-      
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Hexo Admin 发布文章</title>
+    <url>/2019/12/31/hello-world/</url>
+    <content><![CDATA[<h3 id="Hexo-Admin"><a href="#Hexo-Admin" class="headerlink" title=" Hexo Admin"></a><center><font face="Cooper Black"> Hexo Admin</font></center></h3><a id="more"></a>
+
+<center><font face="华文行楷">第一次尝试使用Hexo Admin发布文章，也是第一次在Hexo上面发布文章</font></center>
+
+<br>
+
+<h4 id="具体实现方式"><a href="#具体实现方式" class="headerlink" title="具体实现方式"></a><center><font face="华文行楷">具体实现方式</font></center></h4><p><font face="华文行楷">一：在Hexo网站目录下，安装 Hexo Admin 插件</font></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-admin</span><br></pre></td></tr></table></figure>
+
+<p><font face="华文行楷">二：启动服务</font></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p><font face="华文行楷">三：访问网址</font></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost:4000&#x2F;admin&#x2F;</span><br></pre></td></tr></table></figure>
+<p><font face="华文行楷">四：在线编辑</font></p>
+]]></content>
       <categories>
-          
-          <category> Hexo的使用 </category>
-          
+        <category>Hexo的使用</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> Hexo </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hexo+GitHub搭建博客</title>
-      <link href="/2019/01/06/Hexo+GitHub%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
-      <url>/2019/01/06/Hexo+GitHub%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</url>
-      
-        <content type="html"><![CDATA[<p>简单阐述搭建过程，就是方便了解总的流程</p><a id="more"></a><p>更加详细的过程请访问：<a href="http://note.youdao.com/noteshare?id=8b60a4919ffac7fe249c05e0fe8fca68&sub=WEBaa2c821c2f7ec63ccb27eea9b17f5a78" target="_blank" rel="noopener">我的有道云笔记</a></p><p><strong>1. 安装Node.js</strong></p><p><strong>2.  安装GIT</strong></p><p><strong>3. 检查GIT是否安装成功</strong></p><p>在cmd中输入：git –version，查看是否会有班版本信息</p><p><strong>4. 安装HEXO</strong></p><p>注意：</p><p>在安装之前需要确保node.js和git安装完成<br>确保安装的两个版本要对应，强烈建议始终尽可能安装最新版本的Hexo和推荐的Node.js 版本</p><p><strong>5. Hexo 更新至最新版本</strong></p><p>命令如下（是下载的最新的就不用执行了，免得搞出冲突）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm update hexo -g</span><br></pre></td></tr></table></figure><p><strong>6. 安装：在两者完成后可以通过npm安装</strong></p><p><strong>7. 初始化</strong></p><p>在blog文件中创建一个hexo文件，在hexo文件夹中git bash<br>输入以下命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure><p>若出现以下界面则安装成功</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INFO Start blogging with Hexo！</span><br></pre></td></tr></table></figure><p><strong>8. 生成静态页面</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>输入以下命令，启动服务<br>$ hexo server</p><p>登录 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> 验证是否成功</p><p><strong>9. 将博客部署到Github Pages上</strong></p><p>简单来讲就是创建一个仓库：Your_user_name.github.io</p><p><strong>10. 配置ssh密钥</strong></p><ol><li><p>输入$ ssh-keygen -t rsa -C “邮箱地址”</p></li><li><p>然后就会出现</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Generating public&#x2F;private rsa key pair.</span><br><span class="line">Enter file in which to save the key (&#x2F;c&#x2F;Users&#x2F;涂涂&#x2F;.ssh&#x2F;id_rsa):</span><br></pre></td></tr></table></figure></li><li><p>直接按Enter进行默认存储，就会出现</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Created directory &#39;&#39;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">&#x2F;&#x2F;这里是要求输入密码，其实不用什么密码，直接回车</span><br></pre></td></tr></table></figure></li><li><p>出现</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Enter same passphrase again:</span><br><span class="line">&#x2F;&#x2F;同样直接回车</span><br></pre></td></tr></table></figure></li><li><p>然后就会出现一堆代码</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Your identification has been saved in &#x2F;c&#x2F;Users&#x2F;涂涂&#x2F;.ssh&#x2F;id_rsa.</span><br><span class="line">Your public key has been saved in &#x2F;c&#x2F;Users&#x2F;涂涂&#x2F;.ssh&#x2F;id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:</span><br><span class="line">&#x2F;&#x2F;这是各种字母数字组成的字符串，尾部是邮箱</span><br><span class="line">The key&#39;s randomart image is:</span><br><span class="line">&#x2F;&#x2F;这是各种数字组成的字符串</span><br></pre></td></tr></table></figure><p>6.输入以下命令，将内容复制到粘贴板上</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ clip &lt; ~&#x2F;.ssh&#x2F;id_rsa.pub</span><br></pre></td></tr></table></figure><p><strong>11. 在GitHub上添加公钥</strong></p><p><strong>12. 测试ssh密钥是否成功</strong></p><ol><li><p>在第一个创建的文件夹中Git Bash，输入<br>$ ssh -T <a href="mailto:git@github.com">git@github.com</a></p></li><li><p>会出现一堆字母</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Are you sure you want to continue connecting (yes&#x2F;no&#x2F;[fingerprint])?</span><br></pre></td></tr></table></figure></li><li><p>输入yes会显示</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You&#39;ve successfully authenticated...</span><br></pre></td></tr></table></figure></li></ol><p><strong>13.配置个人信息</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name &quot;用户名&quot;</span><br><span class="line">$ git config --global user.email &quot;邮箱&quot;</span><br></pre></td></tr></table></figure><p><strong>14.在你的HEXO目录下，一顿</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure><p>然后访问 “<a href="http://github的仓库名&quot;" target="_blank" rel="noopener">http://github的仓库名&quot;</a> 就可以看到你的网站了</p>]]></content>
-      
-      
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo+GitHub搭建博客</title>
+    <url>/2019/01/06/Hexo+GitHub%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<p>简单阐述搭建过程，就是方便了解总的流程</p>
+<a id="more"></a>
+
+<p>更加详细的过程请访问：<a href="http://note.youdao.com/noteshare?id=8b60a4919ffac7fe249c05e0fe8fca68&sub=WEBaa2c821c2f7ec63ccb27eea9b17f5a78" target="_blank" rel="noopener">我的有道云笔记</a></p>
+<p><strong>1. 安装Node.js</strong></p>
+<p><strong>2.  安装GIT</strong></p>
+<p><strong>3. 检查GIT是否安装成功</strong></p>
+<p>在cmd中输入：git –version，查看是否会有班版本信息</p>
+<p><strong>4. 安装HEXO</strong></p>
+<p>注意：</p>
+<p>在安装之前需要确保node.js和git安装完成<br>确保安装的两个版本要对应，强烈建议始终尽可能安装最新版本的Hexo和推荐的Node.js 版本</p>
+<p><strong>5. Hexo 更新至最新版本</strong></p>
+<p>命令如下（是下载的最新的就不用执行了，免得搞出冲突）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm update hexo -g</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>6. 安装：在两者完成后可以通过npm安装</strong></p>
+<p><strong>7. 初始化</strong></p>
+<p>在blog文件中创建一个hexo文件，在hexo文件夹中git bash<br>输入以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
+
+<p>若出现以下界面则安装成功</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INFO Start blogging with Hexo！</span><br></pre></td></tr></table></figure>
+
+<p><strong>8. 生成静态页面</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+
+<p>输入以下命令，启动服务<br>$ hexo server</p>
+<p>登录 <a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a> 验证是否成功</p>
+<p><strong>9. 将博客部署到Github Pages上</strong></p>
+<p>简单来讲就是创建一个仓库：Your_user_name.github.io</p>
+<p><strong>10. 配置ssh密钥</strong></p>
+<ol>
+<li><p>输入$ ssh-keygen -t rsa -C “邮箱地址”</p>
+</li>
+<li><p>然后就会出现</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Generating public&#x2F;private rsa key pair.</span><br><span class="line">Enter file in which to save the key (&#x2F;c&#x2F;Users&#x2F;涂涂&#x2F;.ssh&#x2F;id_rsa):</span><br></pre></td></tr></table></figure></li>
+<li><p>直接按Enter进行默认存储，就会出现</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Created directory &#39;&#39;.</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">&#x2F;&#x2F;这里是要求输入密码，其实不用什么密码，直接回车</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>出现</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Enter same passphrase again:</span><br><span class="line">&#x2F;&#x2F;同样直接回车</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后就会出现一堆代码</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Your identification has been saved in &#x2F;c&#x2F;Users&#x2F;涂涂&#x2F;.ssh&#x2F;id_rsa.</span><br><span class="line">Your public key has been saved in &#x2F;c&#x2F;Users&#x2F;涂涂&#x2F;.ssh&#x2F;id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:</span><br><span class="line">&#x2F;&#x2F;这是各种字母数字组成的字符串，尾部是邮箱</span><br><span class="line">The key&#39;s randomart image is:</span><br><span class="line">&#x2F;&#x2F;这是各种数字组成的字符串</span><br></pre></td></tr></table></figure>
+<p>6.输入以下命令，将内容复制到粘贴板上</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ clip &lt; ~&#x2F;.ssh&#x2F;id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p><strong>11. 在GitHub上添加公钥</strong></p>
+<p><strong>12. 测试ssh密钥是否成功</strong></p>
+<ol>
+<li><p>在第一个创建的文件夹中Git Bash，输入<br>$ ssh -T <a href="mailto:git@github.com">git@github.com</a></p>
+</li>
+<li><p>会出现一堆字母</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Are you sure you want to continue connecting (yes&#x2F;no&#x2F;[fingerprint])?</span><br></pre></td></tr></table></figure></li>
+<li><p>输入yes会显示</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">You&#39;ve successfully authenticated...</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>13.配置个人信息</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &quot;用户名&quot;</span><br><span class="line">$ git config --global user.email &quot;邮箱&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>14.在你的HEXO目录下，一顿</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<p>然后访问 “<a href="http://github的仓库名&quot;" target="_blank" rel="noopener">http://github的仓库名&quot;</a> 就可以看到你的网站了</p>
+]]></content>
       <categories>
-          
-          <category> Hexo的使用 </category>
-          
+        <category>Hexo的使用</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> Hexo </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>2019年度报告</title>
-      <link href="/2019/01/05/2020/"/>
-      <url>/2019/01/05/2020/</url>
-      
-        <content type="html"><![CDATA[<h1 id="个人2019年年度报告"><a href="#个人2019年年度报告" class="headerlink" title="个人2019年年度报告"></a><center>个人2019年年度报告</center></h1><a id="more"></a><blockquote><p>2019年包括是大一的下学期和大二上学期，以及暑假</p></blockquote><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习的路上总会遇到一些厉害的人，努力的人，他们的进步总是能激起我们这些后辈的热血，这几天搭建好了博客，欣赏了很多大佬的个人博客，看了很多他们自己的成长历程，每一次的进步，每一次的记录，让本身对于博客就有想法的我更想去通过博客来记录自己的成长历程，也让那些人去感受成长时我踩过的坑，好避而让之。</p><p>万事开头难，好的开端需要一个好的引导，想写下一篇年度总结，反思过往，看好未来</p><p>总结如下：</p><h2 id="没做过什么大事"><a href="#没做过什么大事" class="headerlink" title="没做过什么大事"></a><center>没做过什么大事</center></h2><p>对于学校里的专业课，基本上都没怎么细细的去听了，都是一边听一边做做其他的，不是自己要装逼，是对于这个很普通的二本学校，学的是有点慢，出于自己对于编程的兴趣，很早就把老师的进度甩到了后面。学校的java课，开了两个学期，这是最要命的。上学期学习基础，下学期就学学高级的部分，说是高级但是没有去深入。就在这样的一个无挑战的环境中，浑浑噩噩。记得我大一下个学期，王者不知道打了多少吧，说真的有点后悔</p><h2 id="探索的一年"><a href="#探索的一年" class="headerlink" title="探索的一年"></a><center>探索的一年</center></h2><p>为什么说是探索的一年呢？</p><p>可以说，学习java这门语言的时候都会有这样的想法，就是怎么去学啊，学完了这个然后去学哪个啊，学完了记不住怎么办啊，等等这些，我想，都应该会有这样类似的经历吧，很正常。</p><p>所以，这就是”探索的一年”的由来。</p><p>这一年，我研究了很多学习路线，虽说总的路线一致（都是学JAVA咯，滑稽），但是也有区别。总路线一致就是说，以JAVA为例吧，先走JAVA基础，然后JAVAWeb，然后就是JAVAEE，再有就是项目开发，其他不是java的东西穿插着学。说什么有区别呢？简单讲就是学习的过程，学习的顺序不一样。有的要你先学习这个，有的要你先学习那个，各有各的方法，那到底应该学习什么，我也是研究了很久。大一下学期的时候，感觉一学期都在干这个，那个时候刚刚接触java，上课下课还是蛮用心的，把老师讲的搞完后，就去做自己的，学学这个，学学那个，制定了一个方案后，又看了一些推文，又觉得这个方案不好，总之，就是迷惑的一学期吧，但是也有收获的，研究的范围广了，知道了哪个时候该学什么，那个技术应该着重去学，那个技术只需要了解，已经过时。经过了这样一个学期，在大二开始的时候，就有了明确的目标，自己学完了JAVAWEB的大部分内容和技术，准备寒假做项目巩固。有句话说的好，要想战胜敌人，就得去了解敌人。如何学好这门课，还得去多了解一下相关的信息，才能如鱼得水。</p><p>为什么如此研究学习很重要？关系到学完了后你对这个东西的理解，更远一点，学习一些复杂的东西前你有过基础，那么，复杂在你看来就不怎么复杂了。举个例子，你学了js，并且较为熟练的掌握，那么jq还会难到你嘛？相反，那就说不准了。。。</p><h2 id="获得的技能"><a href="#获得的技能" class="headerlink" title="获得的技能"></a><center>获得的技能</center></h2><ol><li>JAVASE</li><li>部分HTML</li><li>部分CSS</li><li>JS</li><li>BootStarp的使用</li><li>TomCat</li><li>Servlet</li><li>Session&amp;&amp;Cookie</li><li>JSP</li><li>MVC</li><li>EL&amp;&amp;JSTL语法</li><li>javaBean</li><li>Filter</li><li>Listener</li><li>JQ</li><li>Ajax</li><li>JSON</li><li>Redis</li></ol><h2 id="仰望2020"><a href="#仰望2020" class="headerlink" title="仰望2020"></a><center>仰望2020</center></h2><h3 id="1-寒假-amp-amp-大二需要完成的书籍"><a href="#1-寒假-amp-amp-大二需要完成的书籍" class="headerlink" title="1. 寒假&amp;&amp;大二需要完成的书籍"></a>1. 寒假&amp;&amp;大二需要完成的书籍</h3><ol><li>《Java核心技术1&amp;&amp;2》</li><li>《编程是想》</li><li>《深入理解JVM》</li><li>《算法》</li><li>《java并发编程的艺术》</li><li>《java多线程编程核心技术》</li><li>《Effective Java》</li></ol><h3 id="2-大二需要掌握的技术"><a href="#2-大二需要掌握的技术" class="headerlink" title="2. 大二需要掌握的技术"></a>2. 大二需要掌握的技术</h3><ol><li>Myatis</li><li>Spring</li><li>SpringMvc</li><li>Git</li><li>Spring Boot</li><li>Docker</li><li>Maven</li></ol><h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><p>对于2020年，总体来讲，是去深入的了解JAVA，并且去接触一些流行框架，同时掌握一些算法</p><br><hr><center><font face="华文行楷" size="5">目标：阿里巴巴</font></center>]]></content>
-      
-      
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2019年度报告</title>
+    <url>/2019/01/05/2020/</url>
+    <content><![CDATA[<h1 id="个人2019年年度报告"><a href="#个人2019年年度报告" class="headerlink" title="个人2019年年度报告"></a><center>个人2019年年度报告</center></h1><a id="more"></a>
+
+<blockquote>
+<p>2019年包括是大一的下学期和大二上学期，以及暑假</p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习的路上总会遇到一些厉害的人，努力的人，他们的进步总是能激起我们这些后辈的热血，这几天搭建好了博客，欣赏了很多大佬的个人博客，看了很多他们自己的成长历程，每一次的进步，每一次的记录，让本身对于博客就有想法的我更想去通过博客来记录自己的成长历程，也让那些人去感受成长时我踩过的坑，好避而让之。</p>
+<p>万事开头难，好的开端需要一个好的引导，想写下一篇年度总结，反思过往，看好未来</p>
+<p>总结如下：</p>
+<h2 id="没做过什么大事"><a href="#没做过什么大事" class="headerlink" title="没做过什么大事"></a><center>没做过什么大事</center></h2><p>对于学校里的专业课，基本上都没怎么细细的去听了，都是一边听一边做做其他的，不是自己要装逼，是对于这个很普通的二本学校，学的是有点慢，出于自己对于编程的兴趣，很早就把老师的进度甩到了后面。学校的java课，开了两个学期，这是最要命的。上学期学习基础，下学期就学学高级的部分，说是高级但是没有去深入。就在这样的一个无挑战的环境中，浑浑噩噩。记得我大一下个学期，王者不知道打了多少吧，说真的有点后悔</p>
+<h2 id="探索的一年"><a href="#探索的一年" class="headerlink" title="探索的一年"></a><center>探索的一年</center></h2><p>为什么说是探索的一年呢？</p>
+<p>可以说，学习java这门语言的时候都会有这样的想法，就是怎么去学啊，学完了这个然后去学哪个啊，学完了记不住怎么办啊，等等这些，我想，都应该会有这样类似的经历吧，很正常。</p>
+<p>所以，这就是”探索的一年”的由来。</p>
+<p>这一年，我研究了很多学习路线，虽说总的路线一致（都是学JAVA咯，滑稽），但是也有区别。总路线一致就是说，以JAVA为例吧，先走JAVA基础，然后JAVAWeb，然后就是JAVAEE，再有就是项目开发，其他不是java的东西穿插着学。说什么有区别呢？简单讲就是学习的过程，学习的顺序不一样。有的要你先学习这个，有的要你先学习那个，各有各的方法，那到底应该学习什么，我也是研究了很久。大一下学期的时候，感觉一学期都在干这个，那个时候刚刚接触java，上课下课还是蛮用心的，把老师讲的搞完后，就去做自己的，学学这个，学学那个，制定了一个方案后，又看了一些推文，又觉得这个方案不好，总之，就是迷惑的一学期吧，但是也有收获的，研究的范围广了，知道了哪个时候该学什么，那个技术应该着重去学，那个技术只需要了解，已经过时。经过了这样一个学期，在大二开始的时候，就有了明确的目标，自己学完了JAVAWEB的大部分内容和技术，准备寒假做项目巩固。有句话说的好，要想战胜敌人，就得去了解敌人。如何学好这门课，还得去多了解一下相关的信息，才能如鱼得水。</p>
+<p>为什么如此研究学习很重要？关系到学完了后你对这个东西的理解，更远一点，学习一些复杂的东西前你有过基础，那么，复杂在你看来就不怎么复杂了。举个例子，你学了js，并且较为熟练的掌握，那么jq还会难到你嘛？相反，那就说不准了。。。</p>
+<h2 id="获得的技能"><a href="#获得的技能" class="headerlink" title="获得的技能"></a><center>获得的技能</center></h2><ol>
+<li>JAVASE</li>
+<li>部分HTML</li>
+<li>部分CSS</li>
+<li>JS</li>
+<li>BootStarp的使用</li>
+<li>TomCat</li>
+<li>Servlet</li>
+<li>Session&amp;&amp;Cookie</li>
+<li>JSP</li>
+<li>MVC</li>
+<li>EL&amp;&amp;JSTL语法</li>
+<li>javaBean</li>
+<li>Filter</li>
+<li>Listener</li>
+<li>JQ</li>
+<li>Ajax</li>
+<li>JSON</li>
+<li>Redis</li>
+</ol>
+<h2 id="仰望2020"><a href="#仰望2020" class="headerlink" title="仰望2020"></a><center>仰望2020</center></h2><h3 id="1-寒假-amp-amp-大二需要完成的书籍"><a href="#1-寒假-amp-amp-大二需要完成的书籍" class="headerlink" title="1. 寒假&amp;&amp;大二需要完成的书籍"></a>1. 寒假&amp;&amp;大二需要完成的书籍</h3><ol>
+<li>《Java核心技术1&amp;&amp;2》</li>
+<li>《编程是想》</li>
+<li>《深入理解JVM》</li>
+<li>《算法》</li>
+<li>《java并发编程的艺术》</li>
+<li>《java多线程编程核心技术》</li>
+<li>《Effective Java》</li>
+</ol>
+<h3 id="2-大二需要掌握的技术"><a href="#2-大二需要掌握的技术" class="headerlink" title="2. 大二需要掌握的技术"></a>2. 大二需要掌握的技术</h3><ol>
+<li>Myatis</li>
+<li>Spring</li>
+<li>SpringMvc</li>
+<li>Git</li>
+<li>Spring Boot</li>
+<li>Docker</li>
+<li>Maven</li>
+</ol>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><p>对于2020年，总体来讲，是去深入的了解JAVA，并且去接触一些流行框架，同时掌握一些算法</p>
+<br>
+
+
+<hr>
+<center><font face="华文行楷" size="5">目标：阿里巴巴</font></center>]]></content>
       <categories>
-          
-          <category> 年度报告 </category>
-          
+        <category>年度报告</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 2020 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Redis持久化</title>
-      <link href="/2019/01/03/Redis2/"/>
-      <url>/2019/01/03/Redis2/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a><center><font>Redis持久化</font></center></h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul><li>什么是持久化</li><li>为什么持久化</li><li>怎么样持久化<a id="more"></a></li></ul><h2 id="什么是持久化"><a href="#什么是持久化" class="headerlink" title="什么是持久化"></a>什么是持久化</h2><p>狭义的理解： “持久化”仅仅指把域对象永久保存到数据库中；</p><p>广义的理解：“持久化”包括和数据库相关的各种操作</p><blockquote><p>总结：持久化就是将数据保存起来,某段时间再次使用<br>数据库技术,将内存数据一文件的形式保存在永久介质中(磁盘等)都是持久化的例子</p></blockquote><h2 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h2><p>个人认为就是能方便的拿数据，增加执行速度</p><p><strong>而Redis为什么要持久化呢？</strong></p><p>我的上篇文章讲了<a href="https://blog.csdn.net/Li_Tu/article/details/103818168" target="_blank" rel="noopener">Redis基础</a>，redis是一个内存数据库</p><p>当redis服务器重启，获取电脑重启，数据会丢失，所以我们要将redis内存中的数据持久化保存到硬盘的文件中</p><h2 id="Redis如何持久化"><a href="#Redis如何持久化" class="headerlink" title="Redis如何持久化"></a>Redis如何持久化</h2><p><strong>Redis持久化机制</strong></p><p><strong>RDB</strong>：默认方式，不需要进行配置，默认就使用这种机制</p><blockquote><p>即：在一定的间隔时间中，检测key的变化情况，然后持久化数据</p></blockquote><p>使用：</p><p>重新启动redis服务器，在Ridis文件目录下运行CMD指令输入：<br><code>redis-server.exe redis.windows.conf</code>    </p><p>解释说明：</p><p>1.在redis.windwos.conf文件，有以下内容</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60  10000</span><br></pre></td></tr></table></figure><p> 2.而在这个内容的上方有这样的一段说明</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//<span class="string">"3种情况下会进行持久化操作"</span></span><br><span class="line">In the example below the behaviour will be to save:</span><br><span class="line">after 900 sec (15 min) <span class="keyword">if</span> at least 1 key changed</span><br><span class="line"><span class="string">"15分钟内1个键值改变"</span></span><br><span class="line">after 300 sec (5 min) <span class="keyword">if</span> at least 10 keys changed</span><br><span class="line"><span class="string">"5分钟内内至少10个键值改变"</span></span><br><span class="line">after 60 sec <span class="keyword">if</span> at least 10000 keys changed</span><br><span class="line"><span class="string">"60秒内至少10000个键值改变"</span></span><br></pre></td></tr></table></figure><p>3.根据自己的需求可以对上述的数字进行修改</p><hr><p><strong>AOF</strong>：日志记录的方式，每一次命令操作后，持久化数据</p><p>使用：</p><p>1.编辑redis.windwos.conf文件，找到以下内容<br><code>appendonly no</code></p><p>2.将no改成yes，即使用了AOF</p><p>3.找到以下内容，使用哪种方式就将前面的#去掉，只保留一个#</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;每一次操作都进行持久化&quot;</span><br><span class="line"># appendfsync always</span><br><span class="line">&quot;每隔一秒进行一次持久化&quot;</span><br><span class="line">appendfsync everysec</span><br><span class="line">&quot;不进行持久化&quot;</span><br><span class="line"># appendfsync no</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
+      <tags>
+        <tag>2020</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis持久化</title>
+    <url>/2019/01/03/Redis2/</url>
+    <content><![CDATA[<h1 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a><center><font>Redis持久化</font></center></h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>什么是持久化</li>
+<li>为什么持久化</li>
+<li>怎么样持久化<a id="more"></a>
+
+</li>
+</ul>
+<h2 id="什么是持久化"><a href="#什么是持久化" class="headerlink" title="什么是持久化"></a>什么是持久化</h2><p>狭义的理解： “持久化”仅仅指把域对象永久保存到数据库中；</p>
+<p>广义的理解：“持久化”包括和数据库相关的各种操作</p>
+<blockquote>
+<p>总结：持久化就是将数据保存起来,某段时间再次使用<br>数据库技术,将内存数据一文件的形式保存在永久介质中(磁盘等)都是持久化的例子</p>
+</blockquote>
+<h2 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h2><p>个人认为就是能方便的拿数据，增加执行速度</p>
+<p><strong>而Redis为什么要持久化呢？</strong></p>
+<p>我的上篇文章讲了<a href="https://blog.csdn.net/Li_Tu/article/details/103818168" target="_blank" rel="noopener">Redis基础</a>，redis是一个内存数据库</p>
+<p>当redis服务器重启，获取电脑重启，数据会丢失，所以我们要将redis内存中的数据持久化保存到硬盘的文件中</p>
+<h2 id="Redis如何持久化"><a href="#Redis如何持久化" class="headerlink" title="Redis如何持久化"></a>Redis如何持久化</h2><p><strong>Redis持久化机制</strong></p>
+<p><strong>RDB</strong>：默认方式，不需要进行配置，默认就使用这种机制</p>
+<blockquote>
+<p>即：在一定的间隔时间中，检测key的变化情况，然后持久化数据</p>
+</blockquote>
+<p>使用：</p>
+<p>重新启动redis服务器，在Ridis文件目录下运行CMD指令输入：<br><code>redis-server.exe redis.windows.conf</code>    </p>
+<p>解释说明：</p>
+<p>1.在redis.windwos.conf文件，有以下内容</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">save 900 1</span><br><span class="line">save 300 10</span><br><span class="line">save 60  10000</span><br></pre></td></tr></table></figure>
+<p> 2.而在这个内容的上方有这样的一段说明</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">//<span class="string">"3种情况下会进行持久化操作"</span></span><br><span class="line">In the example below the behaviour will be to save:</span><br><span class="line">after 900 sec (15 min) <span class="keyword">if</span> at least 1 key changed</span><br><span class="line"><span class="string">"15分钟内1个键值改变"</span></span><br><span class="line">after 300 sec (5 min) <span class="keyword">if</span> at least 10 keys changed</span><br><span class="line"><span class="string">"5分钟内内至少10个键值改变"</span></span><br><span class="line">after 60 sec <span class="keyword">if</span> at least 10000 keys changed</span><br><span class="line"><span class="string">"60秒内至少10000个键值改变"</span></span><br></pre></td></tr></table></figure>
+<p>3.根据自己的需求可以对上述的数字进行修改</p>
+<hr>
+<p><strong>AOF</strong>：日志记录的方式，每一次命令操作后，持久化数据</p>
+<p>使用：</p>
+<p>1.编辑redis.windwos.conf文件，找到以下内容<br><code>appendonly no</code></p>
+<p>2.将no改成yes，即使用了AOF</p>
+<p>3.找到以下内容，使用哪种方式就将前面的#去掉，只保留一个#</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;每一次操作都进行持久化&quot;</span><br><span class="line"># appendfsync always</span><br><span class="line">&quot;每隔一秒进行一次持久化&quot;</span><br><span class="line">appendfsync everysec</span><br><span class="line">&quot;不进行持久化&quot;</span><br><span class="line"># appendfsync no</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-          
-          <category> Redis </category>
-          
+        <category>Redis</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> Redis </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
 </search>
