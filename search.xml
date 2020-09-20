@@ -1,11 +1,447 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>JAVA进阶</title>
+    <url>/2020/09/20/VA%E8%BF%9B%E9%98%B6/</url>
+    <content><![CDATA[<h1 id="JAVA进阶"><a href="#JAVA进阶" class="headerlink" title="JAVA进阶"></a>JAVA进阶</h1><ul>
+<li>I/0</li>
+<li>JDBC</li>
+<li>多线程</li>
+<li>反射</li>
+<li>泛型</li>
+<li>集合</li>
+<li>网络编程<a id="more"></a>
+
+</li>
+</ul>
+<blockquote>
+<p>笔记来源于黑马视频，播客，书籍，以及个人理解</p>
+</blockquote>
+<h2 id="I-O：输入-输出流"><a href="#I-O：输入-输出流" class="headerlink" title="I/O：输入/输出流"></a>I/O：输入/输出流</h2><p><strong>什么是IO</strong> </p>
+<p>Java中I/O操作：主要是指使用 java.io 包下的内容，进行输入、输出操作</p>
+<p>IO流：就是数据传输的通道</p>
+<p>流：一组有顺序的，有起点和终点的字节集合，是对数据传输的总称或抽象</p>
+<p>输入：也叫做读取数据</p>
+<p>输出：也叫做作写入数据 </p>
+<p><strong>分类</strong></p>
+<p>根据数据的流向分为：输入流和输出流</p>
+<p>​    输入流 ：把数据从 其他设备 上读取到 内存 中的流。 </p>
+<p>​    输出流 ：把数据从 内存 中写出到 其他设备 上的流。</p>
+<p>格局数据的类型分为：字节流和字符流</p>
+<p>​    字节流 ：以字节为单位，读写数据的流。 </p>
+<p>​    字符流 ：以字符为单位，读写数据的流。</p>
+<p><strong>字节流和字符流的区别（知识点）</strong></p>
+<p>1，字节流没有缓冲区，直接输出，字符流有缓冲区。</p>
+<blockquote>
+<p>也就是说字节流不需要调用close方法就已经把内容输出了，但是字符流会在调用close或者flush方法时，内容才会输出</p>
+</blockquote>
+<p> 2，读写单位不同</p>
+<blockquote>
+<p>字节流以字节（8bit）为单位，字符流以字符为单位，根据码表的不同而不同</p>
+</blockquote>
+<p>3，处理对象不同</p>
+<blockquote>
+<p>字节流能处理所有类型的数据，而字符流只能处理字符类型的数据</p>
+</blockquote>
+<h3 id="一，File类"><a href="#一，File类" class="headerlink" title="一，File类"></a>一，File类</h3><p>Java文件类以抽象的方式代表文件名和目录路径名。该类主要用于文件和目录的创建、文件的查找和文件的删除等</p>
+<blockquote>
+<p>其中有很多API方法就不做讨论</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">File file=<span class="keyword">new</span> File(<span class="string">"test.txt"</span>);</span><br><span class="line"><span class="comment">//不会在当前目录下创建文件</span></span><br><span class="line"><span class="comment">//但是使用其他流初始化时，没有文件就会在根目录下创建这个文件</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>输出</p>
+<h4 id="FileOutputStream"><a href="#FileOutputStream" class="headerlink" title="FileOutputStream"></a><strong>FileOutputStream</strong></h4><p>FileOutputStream 类是文件输出流，用于将数据写出到文件</p>
+<blockquote>
+<p>写入数据的原理：</p>
+<p>(内存–&gt;硬盘)</p>
+<p>java程序–&gt;JVM(java虚拟机)–&gt;OS(操作系统)–&gt;OS调用写数据的方法–&gt;把数据写入到文件中</p>
+</blockquote>
+<p>构造方法 ：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileOutputStream</span><span class="params">(File file)</span> ：创建文件输出流以写入由指定的File对象表示的文件</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileOutputStream</span><span class="params">(String name)</span> ： 创建文件输出流以指定的名称写入文件</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<p>当你创建一个流对象时，必须传入一个文件路径。该路径下，如果没有这个文件，会创建该文件。如果有这个文件，会清空这个文件的数据，需要标明追加数据</p>
+<p><strong>笔记</strong>：（需要验证正确与否）</p>
+<p>写入一个字节，在实际的文件中，显示的却是ASCLL码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(file); </span><br><span class="line">fos.write(<span class="number">33</span>);<span class="comment">//写入文件的是感叹号（！）</span></span><br></pre></td></tr></table></figure>
+
+<p>验证是正确的，写入的是对应ASCLL码的字符</p>
+<h4 id="FileWriter"><a href="#FileWriter" class="headerlink" title="FileWriter"></a><strong>FileWriter</strong></h4><p>java.io.FileWriter 类是写出字符到文件的便利类</p>
+<blockquote>
+<p>构造时使用系统默认的字符编码和默认字节缓冲区</p>
+</blockquote>
+<p>构造方法 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileWriter(File file) ： 创建一个新的FileWriter，给定要读取的File对象 	</span><br><span class="line"></span><br><span class="line">FileWriter(String fileName) ： 创建一个新的 FileWriter，给定要读取的文件的名称</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>输入</p>
+<h4 id="FileInputStream"><a href="#FileInputStream" class="headerlink" title="FileInputStream"></a><strong>FileInputStream</strong></h4><p>java.io.FileInputStream 类是文件输入流，从文件中读取字节</p>
+<p>构造方法 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileInputStream</span><span class="params">(File file)</span></span></span><br></pre></td></tr></table></figure>
+
+<p> 通过打开与实际文件的连接来创建一个 FileInputStream ，该文件由文件系统中的File对象ﬁle命名</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">FileInputStream(String name)</span><br></pre></td></tr></table></figure>
+
+<p>通过打开与实际文件的连接来创建一个 FileInputStream ，该文件由文件系统中的路径名name命名 </p>
+<p><strong>注意：</strong></p>
+<p>当你创建一个流对象时，必须传入一个文件路径。该路径下，如果没有该文件,会抛出 FileNotFoundException ，不同于输出流</p>
+<p>当文件读取到结尾时返回 -1,循环结束</p>
+<h4 id="FileReader"><a href="#FileReader" class="headerlink" title="FileReader"></a><strong>FileReader</strong></h4><p>java.io.FileReader 类是读取字符文件的便利类,是一个抽象类</p>
+<blockquote>
+<p>构造时使用系统默认的字符编码和默认字节缓冲区</p>
+</blockquote>
+<p><strong>字符编码</strong>：字节与字符的对应规则</p>
+<blockquote>
+<p>Windows系统的中文编码默认是GBK编码表。</p>
+<p>idea中UTF-8编码表</p>
+</blockquote>
+<p><strong>字节缓冲区</strong>：一个字节数组，用来临时存储字节数据。</p>
+<p><strong>构造方法</strong> :</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileReader(File file) ： 创建一个新的 FileReader ，给定要读取的File对象  </span><br><span class="line"></span><br><span class="line">FileReader(String fileName) ： 创建一个新的 FileReader 给定要读取的文件的名称</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="数据追加"><a href="#数据追加" class="headerlink" title="数据追加"></a><strong>数据追加</strong></h4><p>在测试的时候，每次程序运行，创建输出流对象，都会清空目标文件中的数据。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileOutputStream</span><span class="params">(File file, <span class="keyword">boolean</span> append)</span> <span class="comment">//文件输出流以写入由指定的 File对象表示的文件。 </span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">FileOutputStream</span><span class="params">(String name, <span class="keyword">boolean</span> append)</span> <span class="comment">//创建文件输出流以指定的名称写入文件。</span></span></span><br></pre></td></tr></table></figure>
+
+<p> 这两个构造方法，参数中都需要传入一个boolean类型的值， true 表示追加数据， false 表示清空原有数据</p>
+<p> 这样创建的输出流对象，就可以指定是否追加续写了</p>
+<h3 id="二，字节流"><a href="#二，字节流" class="headerlink" title="二，字节流"></a>二，字节流</h3><p><strong>一切皆为字节</strong></p>
+<p>一切文件数据(文本、图片、视频等)在存储时，都是以二进制数字的形式保存，都一个一个的字节，那么传输时一 样如此。所以，字节流可以传输任意文件数据。在操作流的时候，无论使用什么样的流对象，底层传输的始终为二进制数据</p>
+<h4 id="字节输出流（OutputStream-）"><a href="#字节输出流（OutputStream-）" class="headerlink" title="字节输出流（OutputStream ）"></a><strong>字节输出流（OutputStream ）</strong></h4><p>java.io.OutputStream 抽象类是表示字节输出流的所有类的超类，将指定的字节信息写出到目的地</p>
+<p>它定义了字节输出流的基本共性功能方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> 关闭此输出流并释放与此流相关联的任何系统资源 		</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span> 刷新此输出流并强制任何缓冲的输出字节被写出</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span>[] b)</span> 将 b.length字节从指定的字节数组写入此输出流</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> ：</span></span><br><span class="line"><span class="function"><span class="comment">//从指定的字节数组写入 len字节，从偏移量oﬀ开始输出到此输出流</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> b)</span> ：将指定的字节输出流</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>写入字节数据</strong> </p>
+<ol>
+<li><p>写出字节： write(int b) 方法，每次可以写出一个字节数据</p>
+</li>
+<li><p>写出字节数组： write(byte[] b) ，每次可以写出数组中的数据</p>
+</li>
+<li><p>写出指定长度字节数组： write(byte[] b, int off, int len) ,每次写出从oﬀ索引开始,len个字节</p>
+</li>
+</ol>
+<h4 id="字节输入流（InputStream）"><a href="#字节输入流（InputStream）" class="headerlink" title="字节输入流（InputStream）"></a><strong>字节输入流（InputStream）</strong></h4><p>InputStream 抽象类是表示字节输入流的所有类的超类，可以读取字节信息到内存中</p>
+<p>它定义了字节输入 流的基本共性功能方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> ：关闭此输入流并释放与此流相关联的任何系统资源。   </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> ： 从输入流读取数据的下一个字节。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] b)</span> ： 从输入流中读取一些字节数，并将它们存储到字节数组b中</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>读取数据的原理(硬盘–&gt;内存)</p>
+<p>​        java程序–&gt;JVM–&gt;OS–&gt;OS读取数据的方法–&gt;读取文件</p>
+</blockquote>
+<p><strong>笔记：</strong></p>
+<p>读取多个字节时，需要一个循环的过程，因为不清楚文件中有多少字节，数组在不确定的情况下不知道能不能装的下文件中的字节，read（）方法读取到一个字节就会返回，一般需要一个循环条件，作为结束的标志</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//模板</span></span><br><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2024</span>];</span><br><span class="line"><span class="keyword">int</span> length = <span class="number">0</span>;</span><br><span class="line">InputStream is = <span class="keyword">new</span> InputStream(file);</span><br><span class="line"><span class="keyword">while</span> ((length = is.read(bytes))!=-<span class="number">1</span>)&#123;</span><br><span class="line">	System.out.println(<span class="keyword">new</span> String(bytes, <span class="number">0</span>, length));</span><br><span class="line">&#125;</span><br><span class="line">is.close();</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>read方法在读取了一个字节后，会将指针移动到下一个字节后</p>
+<p>​    并且在流的末端返回-1作为结束标志</p>
+<h3 id="三，字符流"><a href="#三，字符流" class="headerlink" title="三，字符流"></a>三，字符流</h3><p>当使用字节流读取文本文件时，可能会有一个小问题。就是遇到中文字符时，可能不会显示完整的字符，那是因为 一个中文字符可能占用多个字节存储。所以Java提供一些字符流类，以字符为单位读写数据，专门用于处理文本文件。</p>
+<p>UTF-8：一个中文占用三字节</p>
+<p>GBK:     一个中文占用2字节</p>
+<h4 id="字符输入流（Reader）"><a href="#字符输入流（Reader）" class="headerlink" title="字符输入流（Reader）"></a><strong>字符输入流（Reader）</strong></h4><p>java.io.Reader 抽象类是表示用于读取字符流的所有类的超类，可以读取字符信息到内存中</p>
+<p>它定义了字符输入流的基本共性功能方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> ：关闭此流并释放与此流相关联的任何系统资源</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> ： 从输入流读取一个字符</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">char</span>[] a)</span> ： 从输入流中读取一些字符，并将它们存储到字符数组a中</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="字符输出流（Writer）"><a href="#字符输出流（Writer）" class="headerlink" title="字符输出流（Writer）"></a><strong>字符输出流（Writer）</strong></h4><p>java.io.Writer 抽象类是表示用于写出字符流的所有类的超类，将指定的字符信息写出到目的地</p>
+<p>它定义了字节 输出流的基本共性功能方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> c)</span> 写入单个字符。 </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">char</span>[] cbuf)</span> 写入字符数组。 </span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">char</span>[]a, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span></span></span><br><span class="line"><span class="function"> 写入字符数组的某一部分,a数组的开始索引,len 写的字符个数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">(String str)</span></span></span><br><span class="line"><span class="function">写入字符串</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">write</span><span class="params">(String str, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> </span></span><br><span class="line"><span class="function">写入字符串的某一部分,oﬀ字符串的开始索引,len写的字符个数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span> 刷新该流的缓冲</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> 关闭此流，但要先刷新它</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="四，打印流"><a href="#四，打印流" class="headerlink" title="四，打印流"></a>四，打印流</h3><p>概述</p>
+<p>平时我们在控制台打印输出，是调用<code>print</code>方法和<code>println</code>方法完成的，这两个方法都来自于<code>java.io.PrintStream</code>类，该类能够方便地打印各种数据类型的值，是一种便捷的输出方式。</p>
+<blockquote>
+<p>包含   字节打印流：PrintStream    字符打印流：PrintWriter。</p>
+</blockquote>
+<h4 id="PrintStream"><a href="#PrintStream" class="headerlink" title="PrintStream"></a><strong>PrintStream</strong></h4><p>构造方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PrintStream</span><span class="params">(String fileName)</span> ： 使用指定的文件名创建一个新的打印流，即为改变打印流向，将输出的地方转移到fileName的地方</span></span><br><span class="line"><span class="function">    </span></span><br><span class="line"><span class="function"><span class="comment">//例子</span></span></span><br><span class="line"><span class="function">PrintStream ps </span>= <span class="keyword">new</span> PrintStream(<span class="string">"文件地"</span>);</span><br><span class="line">System.setOut(ps);<span class="comment">//把输出语句的目的地改变为打印流的目的地</span></span><br></pre></td></tr></table></figure>
+
+<p>其中还有很多printf和print方法，也就是说</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.printf()<span class="comment">//可以打印任何数据</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="PrintWriter"><a href="#PrintWriter" class="headerlink" title="PrintWriter"></a>PrintWriter</h3><p>专门打印字符</p>
+<p>构造</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PrintWriter</span><span class="params">(String fileName)</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="五，缓冲流"><a href="#五，缓冲流" class="headerlink" title="五，缓冲流"></a>五，缓冲流</h3><p><strong>概述</strong></p>
+<p>缓冲流,也叫高效流，是对4个基本的<code>FileXxx</code> 流的增强，所以也是4个流，按照数据类型分类：</p>
+<p>字节缓冲输入流：BufferedInputStream</p>
+<p>字节缓冲输出流：BufferedOutputStream</p>
+<p>字符缓冲输出流：BufferedReader</p>
+<p>字符缓冲输入流：BufferedWriter</p>
+<p><strong>基本原理</strong></p>
+<p>是在创建流对象时，会创建一个内置的默认大小的缓冲区数组，通过缓冲区读写，减少系统IO请求次数，从而提高读写的效率。</p>
+<p><strong>构造方法</strong></p>
+<p><strong>字节缓冲流</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BufferedInputStream</span><span class="params">(InputStream in)</span>：创建一个 新的缓冲输入流 </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BufferedOutputStream</span><span class="params">(OutputStream out)</span>： 创建一个新的缓冲输出流</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>字符缓冲流</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BufferedReader</span><span class="params">(Reader in)</span>` ：创建一个 新的缓冲输入流</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BufferedWriter</span><span class="params">(Writer out)</span>`： 创建一个新的缓冲输出流</span></span><br></pre></td></tr></table></figure>
+
+<p>特有的方法;</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">BufferedReader：<span class="function"><span class="keyword">public</span> String <span class="title">readLine</span><span class="params">()</span>: 读一行文字</span></span><br><span class="line"><span class="function">BufferedWriter：<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">newLine</span><span class="params">()</span>: 写一行行分隔符,由系统属性定义符号</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="六，转换流"><a href="#六，转换流" class="headerlink" title="六，转换流"></a>六，转换流</h3><h4 id="InputStreamReader"><a href="#InputStreamReader" class="headerlink" title="InputStreamReader"></a><strong>InputStreamReader</strong></h4><p><code>java.io.InputStreamReader</code>，是Reader的子类，是从字节流到字符流的桥梁。</p>
+<p>它读取字节，并使用指定的字符集将其解码为字符。它的字符集可以由名称指定，也可以接受平台的默认字符集</p>
+<blockquote>
+<p>转换流是字节与字符间的桥梁</p>
+</blockquote>
+<p>何时使用转换流？</p>
+<ol>
+<li>当字节和字符之间有转换动作时</li>
+<li>操作的数据需要编码或解码时</li>
+</ol>
+<p>构造方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">InputStreamReader(InputStream in)`: 创建一个使用默认字符集的字符流。 </span><br><span class="line">InputStreamReader(InputStream in, String charsetName)`: 创建一个指定字符集的字符流。</span><br></pre></td></tr></table></figure>
+
+<h4 id="OutputStreamWriter"><a href="#OutputStreamWriter" class="headerlink" title="OutputStreamWriter"></a><strong>OutputStreamWriter</strong></h4><p><code>java.io.OutputStreamWriter</code> ，是Writer的子类，是从字符流到字节流的桥梁。</p>
+<p>使用指定的字符集将字符编码为字节。它的字符集可以由名称指定，也可以接受平台的默认字符集。 </p>
+<p>构造方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">OutputStreamWriter(OutputStream in)`: 创建一个使用默认字符集的字符流。 </span><br><span class="line">OutputStreamWriter(OutputStream in, String charsetName)`: 创建一个指定字符集的字符流。</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="七，递归"><a href="#七，递归" class="headerlink" title="七，递归"></a>七，递归</h3><p>递归打印多级目录 </p>
+<p>分析：多级目录的打印，就是当目录的嵌套。遍历之前，无从知道到底有多少级目录，所以我们还是要使用递归实现。</p>
+<p> 文件搜索 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">搜索 D:\aaa 目录中的 .java 文件。</span><br><span class="line"></span><br><span class="line">String中的endWith方法，返回值为boolean</span><br><span class="line"></span><br><span class="line">file.getName().endsWith(&quot;.java&quot;)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">File file = <span class="keyword">new</span> File(pathname);<span class="comment">//创建File</span></span><br><span class="line">      File[] files = file.listFiles();<span class="comment">//把当前File对象下所有的文件夹或目录</span></span><br><span class="line">      <span class="keyword">for</span> (File file1: files)&#123;</span><br><span class="line">          <span class="keyword">if</span> (file1.isFile())&#123;<span class="comment">//递归的终止条件是：当前File为文件</span></span><br><span class="line">              System.out.println(file1.getAbsolutePath());</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">else</span>&#123;<span class="comment">//当前File为目录，则，打印当前File的子文件的递归目录</span></span><br><span class="line">              <span class="comment">//String s = file1.getPath();</span></span><br><span class="line">              <span class="comment">//printAllFiles(s);</span></span><br><span class="line">              <span class="comment">//printAllFiles(file1.getPath());</span></span><br><span class="line">              System.out.println(file1.getAbsolutePath());</span><br><span class="line">              printAllFiles(file1.getAbsolutePath());</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="八，序列化和反序列化"><a href="#八，序列化和反序列化" class="headerlink" title="八，序列化和反序列化"></a>八，序列化和反序列化</h3><p>代码操作</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Book</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> price;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Book</span><span class="params">(String name , <span class="keyword">int</span> price)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.price= price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Book&#123;"</span> +</span><br><span class="line">                <span class="string">"name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", price="</span> + price +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        File file = <span class="keyword">new</span> File(<span class="string">"test.txt"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(file));</span><br><span class="line">            oos.writeObject(<span class="keyword">new</span> Book(<span class="string">"sb"</span>,<span class="number">22</span>));</span><br><span class="line">            oos.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>反序列化</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ObjectInputStream ois=<span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">"e:"</span>+File.separator+<span class="string">"demoA.txt"</span>)));</span><br><span class="line"> </span><br><span class="line">Object obj=ois.readObject()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="九，关闭和刷新"><a href="#九，关闭和刷新" class="headerlink" title="九，关闭和刷新"></a>九，关闭和刷新</h3><p>因为内置缓冲区的原因，如果不关闭输出流，无法写出字符到文件中。但是关闭的流对象，是无法继续写出数据 的。如果我们既想写出数据，又想继续使用流，就需要 flush 方法了。</p>
+<p>flush ：刷新缓冲区，流对象可以继续使用。 </p>
+<p>close :先刷新缓冲区，然后通知系统释放资源。流对象不可以再被使用了</p>
+<h3 id="十，Scanner"><a href="#十，Scanner" class="headerlink" title="十，Scanner"></a>十，Scanner</h3><h3 id="十，新特性"><a href="#十，新特性" class="headerlink" title="十，新特性"></a>十，新特性</h3><p>JDK9</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\1.jpg"</span>);</span><br><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"d:\\1.jpg"</span>);</span><br><span class="line">        <span class="keyword">try</span>(fis;fos)&#123;</span><br><span class="line">            <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>((len = fis.read())!=-<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="comment">//使用字节输出流中的方法write,把读取到的字节写入到目的地的文件中</span></span><br><span class="line">                fos.write(len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>JDK7</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span>(</span><br><span class="line"> FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\1.jpg"</span>);</span><br><span class="line"> FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"d:\\1.jpg"</span>);)</span><br><span class="line"> &#123;</span><br><span class="line">            <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span>((len = fis.read())!=-<span class="number">1</span>)&#123;</span><br><span class="line">                <span class="comment">//使用字节输出流中的方法write,把读取到的字节写入到目的地的文件中</span></span><br><span class="line">                fos.write(len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JDBC：-Java-DataBase-Connectivity"><a href="#JDBC：-Java-DataBase-Connectivity" class="headerlink" title="JDBC： Java DataBase Connectivity"></a>JDBC： Java DataBase Connectivity</h2><h3 id="一，使用"><a href="#一，使用" class="headerlink" title="一，使用"></a>一，使用</h3><p>导入jar包，根据不同版本导入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql-connector-java-5.0.8-bin-jar</span><br></pre></td></tr></table></figure>
+
+<p>注册驱动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>取数据库连接对象 Connection</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connection 	&#x3D; DriverManager.getConnection(&quot;jdbc:mysql:&#x2F;&#x2F;localhost:3306&#x2F;db3&quot;, &quot;root&quot;, &quot;root&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>定义sql</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">String sql &#x3D; &quot;update account set balance &#x3D; 500 where id &#x3D; 1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>获取执行sql语句的对象 Statement</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Statement stmt &#x3D; conn.createStatement();</span><br></pre></td></tr></table></figure>
+
+<p>行sql，接受返回结果</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int count &#x3D; stmt.executeUpdate(sql);</span><br></pre></td></tr></table></figure>
+
+<p>处理结果，释放资源</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">stmt.close();</span><br><span class="line">conn.close();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="二，具体对象"><a href="#二，具体对象" class="headerlink" title="二，具体对象"></a>二，具体对象</h3><h4 id="DriverManager：驱动管理对象"><a href="#DriverManager：驱动管理对象" class="headerlink" title="DriverManager：驱动管理对象"></a>DriverManager：驱动管理对象</h4><p>1，告诉程序该使用哪一个数据库驱动</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//通过查看源码发现：在com.mysql.jdbc.Driver类中存在静态代码块</span></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">        java.sql.DriverManager.registerDriver(<span class="keyword">new</span> Driver());</span><br><span class="line">	 &#125; <span class="keyword">catch</span> (SQLException E) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Can't register driver!"</span>);</span><br><span class="line">	 &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写代码就只用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Class.forName(&quot;com.mysql.jdbc.Driver&quot;);&#x2F;&#x2F;sql5.7版本前</span><br><span class="line">Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);&#x2F;&#x2F;sql5.7版本后</span><br></pre></td></tr></table></figure>
+
+<p>2，获取数据库连接</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">static Connection getConnection(String url, String user, String password)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Connection：数据库连接对象"><a href="#Connection：数据库连接对象" class="headerlink" title="Connection：数据库连接对象"></a>Connection：数据库连接对象</h4><p>1，获取执行sql对象</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Statement createStatement()</span><br><span class="line">PreparedStatement prepareStatement(String sql)</span><br></pre></td></tr></table></figure>
+
+<p>2，管理实务</p>
+<h4 id="Statement：执行sql的对象"><a href="#Statement：执行sql的对象" class="headerlink" title="Statement：执行sql的对象"></a>Statement：执行sql的对象</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. boolean execute(String sql) ：可以执行任意的sql </span><br><span class="line">2. int executeUpdate(String sql) ：执行DML语句、DDL语句</span><br><span class="line">3. ResultSet executeQuery(String sql)  ：执行DQL（select)语句</span><br></pre></td></tr></table></figure>
+
+
+
+<p>executeUpdate()方法的返回值：<strong>影响的行数</strong>，<strong>可以通过这个影响的行数判断DML语句是否执行成功</strong> 返回值&gt;0的则执行成功，反之，则失败</p>
+<h4 id="ResultSet：结果集对象-封装查询结果"><a href="#ResultSet：结果集对象-封装查询结果" class="headerlink" title="ResultSet：结果集对象,封装查询结果"></a>ResultSet：结果集对象,封装查询结果</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">next</span><span class="params">()</span>:</span></span><br><span class="line"><span class="function"><span class="comment">//游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">getXxx(参数):获取数据</span><br></pre></td></tr></table></figure>
+
+<p>Xxx：代表数据类型 </p>
+<ol>
+<li>int：代表列的编号,从1开始  如： getString(1) </li>
+<li>String：代表列名称。 如： getDouble(“balance”)</li>
+</ol>
+<p>注意：resultSet的索引是从1开始的</p>
+<h4 id="PreparedStatement：执行sql的对象"><a href="#PreparedStatement：执行sql的对象" class="headerlink" title="PreparedStatement：执行sql的对象"></a>PreparedStatement：执行sql的对象</h4><p>SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接。会造成安全性问题</p>
+<blockquote>
+<p>输入密码：a’ or ‘a’ = ‘a</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">而执行的sql：select * from user where username &#x3D; &#39;fhdsjkf&#39; and password &#x3D; &#39;a&#39; or &#39;a&#39; &#x3D; &#39;a&#39; </span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>解决：参数使用?作为占位符</p>
+<p>那么定义的sql</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> username = ? <span class="keyword">and</span> age = ?;</span><br></pre></td></tr></table></figure>
+
+<p>而执行sql的对象就换为</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">PreparedStatement preparedStatement  = Connection.prepareStatement(String sql);</span><br></pre></td></tr></table></figure>
+
+<p>接着就是赋值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">方法： setXxx(参数1,参数2)</span><br><span class="line">	* 参数1：？的位置编号 从1 开始</span><br><span class="line">	* 参数2：？的值</span><br><span class="line"></span><br><span class="line">preparedStatement.setString(1,&quot;图图&quot;);</span><br><span class="line">preparedStatement.setInt(1,18);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三，JDBC工具类"><a href="#三，JDBC工具类" class="headerlink" title="三，JDBC工具类"></a>三，JDBC工具类</h3><p>1，需要使用jdbc.properties配置文件保存数据源信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">driver&#x3D;数据库驱动路径</span><br><span class="line">url&#x3D;url连接字符串</span><br><span class="line">user&#x3D;用户名</span><br><span class="line">password&#x3D;密码</span><br></pre></td></tr></table></figure>
+
+<p>2，实现配置类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDBCUtil</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String url;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String user;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String password;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String driver;</span><br><span class="line">    <span class="comment">// 使用静态代码注册驱动并给静态变量赋值</span></span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建Properties集合类</span></span><br><span class="line">            Properties pro = <span class="keyword">new</span> Properties();</span><br><span class="line">            <span class="comment">// 获取src路径下文件，使用ClassLoader类加载器</span></span><br><span class="line">            ClassLoader classLoader = JDBCUtils<span class="class">.<span class="keyword">class</span>.<span class="title">getClassLoader</span>()</span>;</span><br><span class="line">            <span class="comment">// URL定位了文件的绝对路径</span></span><br><span class="line">            URL res = classLoader.getResource(<span class="string">"jdbc.properties"</span>);</span><br><span class="line">            <span class="comment">// 获取字符串路径</span></span><br><span class="line">            String path = res.getPath();</span><br><span class="line">            <span class="comment">// 读取文件</span></span><br><span class="line">            pro.load(<span class="keyword">new</span> FileReader(path));</span><br><span class="line">            <span class="comment">// 给静态变量赋值</span></span><br><span class="line">            url = pro.getProperty(<span class="string">"url"</span>);</span><br><span class="line">            user = pro.getProperty(<span class="string">"user"</span>);</span><br><span class="line">            password = pro.getProperty(<span class="string">"password"</span>);</span><br><span class="line">            driver = pro.getProperty(<span class="string">"driver"</span>);</span><br><span class="line">            <span class="comment">// 注册驱动</span></span><br><span class="line">            Class.forName(driver);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取连接</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DriverManager.getConnection(url, user, password);</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">//释放资源</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Statement stmt, Connection conn)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(stmt != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                stmt.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(conn != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                conn.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="四，JDBC控制事务"><a href="#四，JDBC控制事务" class="headerlink" title="四，JDBC控制事务"></a>四，JDBC控制事务</h3><blockquote>
+<p>这些东西个人认为在mysql知识点中详细归纳比较好，毕竟那些框架都对事物有良好的支持</p>
+</blockquote>
+<h4 id="1，开启事务"><a href="#1，开启事务" class="headerlink" title="1，开启事务"></a>1，开启事务</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Connection.setAutoCommit(<span class="keyword">boolean</span> autoCommit);</span><br><span class="line"><span class="comment">//调用该方法设置参数为false，即开启事务</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2，提交事务"><a href="#2，提交事务" class="headerlink" title="2，提交事务"></a>2，提交事务</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connection.commit();</span><br></pre></td></tr></table></figure>
+
+<h4 id="3，回滚事务"><a href="#3，回滚事务" class="headerlink" title="3，回滚事务"></a>3，回滚事务</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connection.rollback();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="五，数据库连接池"><a href="#五，数据库连接池" class="headerlink" title="五，数据库连接池"></a>五，数据库连接池</h3><p>其实就是一个容器(集合)，存放数据库连接的容器。</p>
+<p>当系统初始化好后，容器被创建，容器中会申请一些连接对象，当用户来访问数据库时，从容器中获取连接对象，<strong>用户访问完之后，会将连接对象归还给容器</strong></p>
+<p>实现方式</p>
+<h3 id="六，SpringJDBC"><a href="#六，SpringJDBC" class="headerlink" title="六，SpringJDBC"></a>六，SpringJDBC</h3><p>1，导入jar包</p>
+<p>2，创建JdbcTemplate对象</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//依赖于数据源DataSource</span></span><br><span class="line">JdbcTemplate template = <span class="keyword">new</span> JdbcTemplate(dataSource);</span><br></pre></td></tr></table></figure>
+
+<p>3，调用JdbcTemplate的方法来完成CRUD的操作</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">update(): 执行DML语句。增、删、改语句</span><br><span class="line"></span><br><span class="line">queryForMap():查询结果将结果集封装为map集合</span><br><span class="line"><span class="comment">//将列名作为key，将值作为value 将这条记录封装为一个map集合</span></span><br><span class="line"><span class="comment">//注意：这个方法查询的结果集长度只能是1</span></span><br><span class="line"></span><br><span class="line">queryForList():查询结果将结果集封装为list集合</span><br><span class="line"><span class="comment">//注意：将每一条记录封装为一个Map集合，再将Map集合装载到List集合中</span></span><br><span class="line"></span><br><span class="line">query():查询结果，将结果封装为JavaBean对象</span><br><span class="line"><span class="comment">//query的参数：RowMapper</span></span><br><span class="line"><span class="comment">//一般我们使用BeanPropertyRowMapper实现类。可以完成数据到JavaBean的自动封装</span></span><br><span class="line"><span class="comment">//new BeanPropertyRowMapper&lt;类型&gt;(类型.class)</span></span><br><span class="line"></span><br><span class="line">queryForObject()：查询结果，将结果封装为对象</span><br><span class="line"><span class="comment">//一般用于聚合函数的查询</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><blockquote>
+<p>多线程往往是java的一个性能重点，所以需要单独一个笔记讲述多线程</p>
+<p>需要我查阅更多的书籍后才能对其统计知识点</p>
+</blockquote>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><h3 id="一，概念"><a href="#一，概念" class="headerlink" title="一，概念"></a>一，概念</h3><p><strong>对于任何一个对象，我们都能够对它的方法和属性进行调用</strong>。我们把这种<strong>动态获取对象信息和调用对象方法</strong>的功能称之为<strong>反射机制</strong>。</p>
+<blockquote>
+<p>我们使用的一些主流框架中反射技术应用是非常广泛的.</p>
+<p>所谓反射其实是获取类的字节码文件，也就是.class文件，那么我们就可以通过Class这个对象进行获取</p>
+</blockquote>
+<h3 id="二，实现反射的方式"><a href="#二，实现反射的方式" class="headerlink" title="二，实现反射的方式"></a>二，实现反射的方式</h3><p>第一种：通过Object类的getClass方法 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Class cla &#x3D; foo.getClass();</span><br></pre></td></tr></table></figure>
+
+<p>第二种：通过对象实例方法获取对象 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Class cla &#x3D; foo.class;</span><br></pre></td></tr></table></figure>
+
+<p>第三种：通过Class.forName方式 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Class cla = Class.forName(<span class="string">"全类名"</span>);</span><br><span class="line">cla.newInstance()<span class="comment">//初始化对象，接着就是使用对象了</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三，相关的逻辑方法"><a href="#三，相关的逻辑方法" class="headerlink" title="三，相关的逻辑方法"></a>三，相关的逻辑方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">getMethod(parameterTypes)用来获取某个公有的方法的对象</span><br><span class="line">getMethods()获得该类所有公有的方法</span><br><span class="line">getDeclaredMethod(parameterTypes)获得该类某个方法</span><br><span class="line">getDeclaredMethods()获得该类所有方法</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><h3 id="一，概念-1"><a href="#一，概念-1" class="headerlink" title="一，概念"></a>一，概念</h3><p>泛型在java中有很重要的地位，在面向对象编程及各种设计模式中有非常广泛的应用</p>
+<p>泛型，即“参数化类型”</p>
+<p>泛型的本质是为了参数化类型（在不创建新的类型的情况下，通过泛型指定的不同类型来控制形参具体限制的类型）</p>
+<h3 id="二，一个经典泛型例子"><a href="#二，一个经典泛型例子" class="headerlink" title="二，一个经典泛型例子"></a>二，一个经典泛型例子</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List arrayList = <span class="keyword">new</span> ArrayList();</span><br><span class="line">arrayList.add(<span class="string">"aaaa"</span>);</span><br><span class="line">arrayList.add(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; arrayList.size();i++)&#123;</span><br><span class="line">    String item = (String)arrayList.get(i);</span><br><span class="line">  	System.out.printf(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//程序就会报错</span></span><br><span class="line"></span><br><span class="line">java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String</span><br><span class="line"><span class="comment">//ArrayList可以存放任意类型，例子中添加了一个String类型，添加了一个Integer类型，再使用时都以String的方式使用，因此程序崩溃了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//所以就有了泛型</span></span><br><span class="line"></span><br><span class="line">List&lt;String&gt; arrayList = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三，特性"><a href="#三，特性" class="headerlink" title="三，特性"></a>三，特性</h3><p>泛型只在编译阶段有效</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; stringArrayList = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">List&lt;Integer&gt; integerArrayList = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line"></span><br><span class="line">Class classStringArrayList = stringArrayList.getClass();</span><br><span class="line">Class classIntegerArrayList = integerArrayList.getClass();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(classStringArrayList.equals(classIntegerArrayList))&#123;</span><br><span class="line">    Log.d(<span class="string">"泛型测试"</span>,<span class="string">"类型相同"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>泛型类型在逻辑上看以看成是多个不同的类型，实际上都是相同的基本类型</p>
+</blockquote>
+<p>注意</p>
+<ul>
+<li>泛型的类型参数只能是类类型，不能是简单类型。</li>
+<li>不能对确切的泛型类型使用instanceof操作，编译时会出错</li>
+</ul>
+<h3 id="四，分类"><a href="#四，分类" class="headerlink" title="四，分类"></a>四，分类</h3><h4 id="1，泛型类"><a href="#1，泛型类" class="headerlink" title="1，泛型类"></a>1，泛型类</h4><p>泛型类型用于类的定义中，被称为泛型类</p>
+<blockquote>
+<p>最典型的就是各种容器类，如：List、Set、Map</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//此处T可以随便写为任意标识，常见的如T、E、K、V等形式的参数常用于表示泛型</span></span><br><span class="line"><span class="comment">//在实例化泛型类时，必须指定T的具体类型</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Generic</span>&lt;<span class="title">T</span>&gt;</span>&#123; </span><br><span class="line">    <span class="comment">//key这个成员变量的类型为T,T的类型由外部指定  </span></span><br><span class="line">    <span class="keyword">private</span> T key;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Generic</span><span class="params">(T key)</span> </span>&#123; <span class="comment">//泛型构造方法形参key的类型也为T，T的类型由外部指定</span></span><br><span class="line">        <span class="keyword">this</span>.key = key;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getKey</span><span class="params">()</span></span>&#123; <span class="comment">//泛型方法getKey的返回值类型为T，T的类型由外部指定</span></span><br><span class="line">        <span class="keyword">return</span> key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2，泛型接口"><a href="#2，泛型接口" class="headerlink" title="2，泛型接口"></a>2，泛型接口</h4><p>泛型接口常被用在各种类的生产器中</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//定义一个泛型接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Generator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">next</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>实现接口需要声明泛型类型，不然会报错</p>
+</blockquote>
+<h4 id="3，泛型方法"><a href="#3，泛型方法" class="headerlink" title="3，泛型方法"></a>3，泛型方法</h4><p>声明此方法为泛型方法：public  <T>  T </T></p>
+<p>只有声明了<T>的方法才是泛型方法</T></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">genericMethod</span><span class="params">()</span></span>&#123;</span><br><span class="line">        T instance = tClass.newInstance();</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="五，泛型通配符"><a href="#五，泛型通配符" class="headerlink" title="五，泛型通配符"></a>五，泛型通配符</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Generic&lt;Number&gt; obj)</span></span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Generic&lt;Integer&gt; gInteger = <span class="keyword">new</span> Generic&lt;Integer&gt;(<span class="number">123</span>);</span><br><span class="line">Generic&lt;Number&gt; gNumber = <span class="keyword">new</span> Generic&lt;Number&gt;(<span class="number">456</span>);</span><br><span class="line"></span><br><span class="line">show(gNumber);<span class="comment">//程序报错</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//	同一种泛型可以对应多个版本（因为参数类型是不确定的），不同版本的泛型类实例是不兼容的</span></span><br><span class="line"><span class="comment">//	因此我们需要一个在逻辑上可以表示同时是Generic&lt;Integer&gt;和Generic&lt;Number&gt;父类的引用类型。由此类型通配符应运而生</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Generic&lt;?&gt; obj)</span></span>&#123; &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="六，泛型上下边界"><a href="#六，泛型上下边界" class="headerlink" title="六，泛型上下边界"></a>六，泛型上下边界</h3><h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><blockquote>
+<p>集合对于面试来讲也是一个大重点，需要额外精力去整理笔记</p>
+</blockquote>
+<h2 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h2><blockquote>
+<p>网络编程需要我去尝试一个聊天项目后再去整理</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>JAVA</category>
+      </categories>
+      <tags>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JAVA</title>
     <url>/2020/09/18/JAVA/</url>
-    <content><![CDATA[<h1 id="JAVA基础"><a href="#JAVA基础" class="headerlink" title="JAVA基础"></a>JAVA基础</h1><a id="more"></a>
+    <content><![CDATA[<h1 id="JAVA基础知识点总结"><a href="#JAVA基础知识点总结" class="headerlink" title="JAVA基础知识点总结"></a>JAVA基础知识点总结</h1><ul>
+<li>基本语法知识点</li>
+</ul>
+<a id="more"></a>
 
-<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="@基本语法"></a>@基本语法</h2><h3 id="一，两大基本数据类型"><a href="#一，两大基本数据类型" class="headerlink" title="一，两大基本数据类型"></a>一，两大基本数据类型</h3><h4 id="1，引用数据类型"><a href="#1，引用数据类型" class="headerlink" title="1，引用数据类型"></a>1，引用数据类型</h4><p>类、接口类型、数组类型、枚举类型、注解类型，字符串型</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">注意：在移植笔记的时候可能会出现错误，导致笔记混乱</span><br></pre></td></tr></table></figure>
+
+<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><h3 id="一，两大基本数据类型"><a href="#一，两大基本数据类型" class="headerlink" title="一，两大基本数据类型"></a>一，两大基本数据类型</h3><h4 id="引用数据类型"><a href="#引用数据类型" class="headerlink" title="引用数据类型"></a>引用数据类型</h4><p>类、接口类型、数组类型、枚举类型、注解类型，字符串型</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">A a =<span class="keyword">new</span> A();</span><br><span class="line"><span class="comment">//变量a的值为它所引用对象的地址</span></span><br></pre></td></tr></table></figure>
 
 
@@ -28,7 +464,7 @@
 
 
 <h6 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h6><p>虚引用是最弱的一种引用关系，如果一个对象仅持有虚引用，那么它就和没有任何引用一样，它随时可能会被回收</p>
-<h4 id="2，基本数据类型"><a href="#2，基本数据类型" class="headerlink" title="2，基本数据类型"></a>2，基本数据类型</h4><blockquote>
+<h4 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h4><blockquote>
 <p>或叫做原生类、内置类型</p>
 </blockquote>
 <h5 id="八种基本数据类型"><a href="#八种基本数据类型" class="headerlink" title="八种基本数据类型"></a>八种基本数据类型</h5><p><code>整型</code>，<code>长整型</code>，<code>短整型</code>，<code>字节</code>，<code>单精度浮点型</code>，<code>双精度浮点型</code>，<code>字符型</code>，<code>boolean型</code></p>
@@ -146,7 +582,8 @@
 <p><strong><code>toSting</code>方法</strong></p>
 <p>一，将<code>StringBuffer</code>对象和<code>StringBulider</code>对象转换为String对象</p>
 <p><strong>正则表达式</strong></p>
-<p>​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">待做</span><br></pre></td></tr></table></figure>
+
 <h6 id="6，boolean"><a href="#6，boolean" class="headerlink" title="6，boolean"></a>6，<code>boolean</code></h6><p>7，数据类型的初始值</p>
 <p><img src="/.com//E:%5C%E6%9C%89%E9%81%93%E4%BA%91%E7%AC%94%E8%AE%B0%5C%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9%5CqqA18D73086F0D435363C26D86B8CAD5E6%5C85c92a00f6234b30add5c47cc6e5cd56%5Cz2xc7zsr.bmp" alt="img"></p>
 <p>附加：String的初始值是null，局部变量没有默认值</p>
@@ -310,7 +747,7 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>|</td>
+<td>\</td>
 <td>如果相对应位都是 0，则结果为 0，否则为 1</td>
 <td>A | B：61,即 0011 1101</td>
 </tr>
@@ -351,9 +788,9 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>| |</td>
+<td>\</td>
 <td></td>
-<td>A | | B为真</td>
+<td>A  \ B为真</td>
 </tr>
 <tr>
 <td>！</td>
@@ -504,7 +941,7 @@
 </tbody></table>
 <p>注意：</p>
 <p>1，<strong>声明时没有写访问修饰符默认是default</strong>，<strong>default不能修饰变量</strong></p>
-<h2 id="字符编码和字符集"><a href="#字符编码和字符集" class="headerlink" title="@字符编码和字符集"></a>@字符编码和字符集</h2><p><strong>字符编码</strong>（Character Encoding）: 就是一套自然语言的字符与二进制数之间的对应规则。</p>
+<h2 id="字符编码和字符集"><a href="#字符编码和字符集" class="headerlink" title="字符编码和字符集"></a>字符编码和字符集</h2><p><strong>字符编码</strong>（Character Encoding）: 就是一套自然语言的字符与二进制数之间的对应规则。</p>
 <p>计算机中储存的信息都是用二进制数表示的，而我们在屏幕上看到的数字、英文、标点符号、汉字等字符是二进制数转换之后的结果</p>
 <p>按照某种规则，将字符存储到计算机中，称为<strong>编码</strong></p>
 <p>反之，将存储在计算机中的二进制数按照某种规则解析显示出来，称为<strong>解码</strong>。</p>
@@ -522,7 +959,7 @@
 
 
 
-<h2 id="对象和类"><a href="#对象和类" class="headerlink" title="@对象和类"></a>@对象和类</h2><h3 id="一，面向对象程序设计（OOP）"><a href="#一，面向对象程序设计（OOP）" class="headerlink" title="一，面向对象程序设计（OOP）"></a>一，面向对象程序设计（OOP）</h3><ul>
+<h2 id="对象和类"><a href="#对象和类" class="headerlink" title="对象和类"></a>对象和类</h2><h3 id="一，面向对象程序设计（OOP）"><a href="#一，面向对象程序设计（OOP）" class="headerlink" title="一，面向对象程序设计（OOP）"></a>一，面向对象程序设计（OOP）</h3><ul>
 <li>多态</li>
 <li>继承</li>
 <li>封装</li>
@@ -622,7 +1059,7 @@
 <p>1.一个私有的数据域</p>
 <p>2.一个公共的域访问器方法（get方法）</p>
 <p>3.一个公有的域更改器方法（set方法）</p>
-<h2 id="继承和多态"><a href="#继承和多态" class="headerlink" title="@继承和多态"></a>@继承和多态</h2><h3 id="一，继承"><a href="#一，继承" class="headerlink" title="一，继承"></a>一，继承</h3><p> 继承就是子类继承父类的特征和行为，使得子类对象（实例）具有父类的实例域和方法，或子类从父类继承方法，使得子类具有父类相同的行为</p>
+<h2 id="继承和多态"><a href="#继承和多态" class="headerlink" title="继承和多态"></a>继承和多态</h2><h3 id="一，继承"><a href="#一，继承" class="headerlink" title="一，继承"></a>一，继承</h3><p> 继承就是子类继承父类的特征和行为，使得子类对象（实例）具有父类的实例域和方法，或子类从父类继承方法，使得子类具有父类相同的行为</p>
 <blockquote>
 <p>子类又被称为派生类</p>
 <p>父类又被称为超类</p>
@@ -706,7 +1143,7 @@
 <li><strong>任何子类必须重写父类的抽象方法</strong>，<strong>或者声明自身为抽象类</strong></li>
 <li><strong>不能被final修饰</strong></li>
 </ul>
-<h2 id="序列化"><a href="#序列化" class="headerlink" title="@序列化"></a>@序列化</h2><h3 id="一，定义"><a href="#一，定义" class="headerlink" title="一，定义"></a>一，定义</h3><p>Java序列化就是指把Java对象转换为字节序列的过程</p>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><h3 id="一，定义"><a href="#一，定义" class="headerlink" title="一，定义"></a>一，定义</h3><p>Java序列化就是指把Java对象转换为字节序列的过程</p>
 <p>Java反序列化就是指把字节序列恢复为Java对象的过程</p>
 <blockquote>
 <p>用一个字节序列可以表示一个对象，该字节序列包含该<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的属性</code>等信息</p>
@@ -742,7 +1179,7 @@
 <p><code>ObjectOutputStream</code>调用Student对象的<code>writeExternal(ObjectOutput out))</code>的方法进行序列化。 </p>
 <p><code>ObjectInputStream</code>会调用Student对象的<code>readExternal(ObjectInput in)</code>的方法进行反序列化。</p>
 </blockquote>
-<h2 id="内部类"><a href="#内部类" class="headerlink" title="@内部类"></a>@内部类</h2><p>即定义在一个类的内部</p>
+<h2 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h2><p>即定义在一个类的内部</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">     <span class="class"><span class="keyword">class</span> <span class="title">B</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>1，可以定义非静态属性和方法，不可以定义static修饰的属性和方法，可以定义static final修饰的编译期变量，除非用static修饰这个内部类</p>
@@ -786,7 +1223,7 @@
 
 <p>1，不需要依赖于外部类</p>
 <p>2，不能使用外部类非static的成员和方法    </p>
-<h2 id="包装类"><a href="#包装类" class="headerlink" title="@包装类"></a>@包装类</h2><p>Java中的基本数据类型没有方法和属性，而包装类就是为了让这些拥有方法和属性</p>
+<h2 id="包装类"><a href="#包装类" class="headerlink" title="包装类"></a>包装类</h2><p>Java中的基本数据类型没有方法和属性，而包装类就是为了让这些拥有方法和属性</p>
 <h3 id="一，分类"><a href="#一，分类" class="headerlink" title="一，分类"></a>一，分类</h3><p>每个基本数据类型都对应着一个包装类</p>
 <h3 id="二，转换"><a href="#二，转换" class="headerlink" title="二，转换"></a>二，转换</h3><p>装箱：基本数据类型转换为包装类</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line"><span class="comment">//自动装箱</span></span><br><span class="line">Intager ii = i;</span><br><span class="line"><span class="comment">//手动装箱</span></span><br><span class="line">Intager ii = <span class="keyword">new</span> Intager(i);</span><br></pre></td></tr></table></figure>
@@ -804,7 +1241,7 @@
 
 
 
-<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="@事件处理"></a>@事件处理</h2><h3 id="一，概念"><a href="#一，概念" class="headerlink" title="一，概念"></a>一，概念</h3><p><strong>事件</strong>：用户对组件的一个操作，称之为一个事件</p>
+<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><h3 id="一，概念"><a href="#一，概念" class="headerlink" title="一，概念"></a>一，概念</h3><p><strong>事件</strong>：用户对组件的一个操作，称之为一个事件</p>
 <p><strong>事件源：</strong>发生事件的组件就是事件源</p>
 <p><strong>事件监听器（处理器）</strong>：监听并负责处理事件的方法</p>
 <h3 id="二，执行顺序"><a href="#二，执行顺序" class="headerlink" title="二，执行顺序"></a>二，执行顺序</h3><p>1、给事件源注册监听器</p>
@@ -832,7 +1269,7 @@
 <p>窗口事件</p>
 <p>选项事件</p>
 <p>表格模型事件</p>
-<h2 id="异常"><a href="#异常" class="headerlink" title="@异常"></a>@异常</h2><p><strong>异常</strong> ：指的是程序在执行过程中，出现的非正常的情况，最终<strong>会导致JVM的非正常停止</strong></p>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><p><strong>异常</strong> ：指的是程序在执行过程中，出现的非正常的情况，最终<strong>会导致JVM的非正常停止</strong></p>
 <p><strong>注意</strong>：    </p>
 <p>1.在Java等面向对象的编程语言中，<strong>异常本身是一个类</strong>，产生异常就是创建异常对象并抛出了一个异常对象</p>
 <p>2.java处理异常的方式是中断处理</p>
@@ -907,10 +1344,16 @@
 
 
 
-<h2 id="Swing"><a href="#Swing" class="headerlink" title="@Swing"></a>@Swing</h2><blockquote>
+<h2 id="Swing"><a href="#Swing" class="headerlink" title="Swing"></a>Swing</h2><blockquote>
 <p>不做讨论</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>JAVA</category>
+      </categories>
+      <tags>
+        <tag>JAVA基础</tag>
+      </tags>
   </entry>
   <entry>
     <title>Hexo添加标签云</title>
