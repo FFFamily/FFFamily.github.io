@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>双亲委派机制</title>
+    <url>/2021/10/18/%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<h1 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h1><ul>
+<li>什么是双亲委派机制？其作用是什么？</li>
+<li>双亲委派机制的过程？</li>
+<li>如何破坏双亲委派机制？</li>
+</ul>
+<a id="more"></a>
+
+
+<h2 id="什么是双亲委派机制"><a href="#什么是双亲委派机制" class="headerlink" title="什么是双亲委派机制"></a>什么是双亲委派机制</h2><p>双亲委派机制指当夹杂器需要加载某一个特定类时，不是立刻由自己加载，而是把这个任务委托给父加载器完成，如果父加载器上还有父加载器，就再委托给上层加载器，直到启动类加载器，如果启动类加载器加载不成功，就要往下返回给拓展类加载器，一直往下。这中间只要有一个类加载器加载成功，就返回成功。</p>
+<h2 id="双亲委派机制有什么用"><a href="#双亲委派机制有什么用" class="headerlink" title="双亲委派机制有什么用"></a>双亲委派机制有什么用</h2><ul>
+<li>避免重复加载类</li>
+<li>保护程序安全，防止核心API被篡改</li>
+</ul>
+<h2 id="加载流程"><a href="#加载流程" class="headerlink" title="加载流程"></a>加载流程</h2><p>从源码我们看到，在ClassLoader的loadClass()方法实现类具体的双亲委派逻辑</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="comment">// 查询是否加载过这个类</span></span><br><span class="line">        Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 如果没有被加载过</span></span><br><span class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">// 传给上层加载器，将加载任务委派</span></span><br><span class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    c = findBootstrapClassOrNull(name);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// 如果从非null父类装入器中找不到类，则引发ClassNotFoundException</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 委派给父类加载后发现，还是没有加载出来</span></span><br><span class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// 如果仍然找不到，则调用自己的findClass以查找该类。</span></span><br><span class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">                c = findClass(name);</span><br><span class="line">                <span class="comment">// 这是定义类装入器；记录统计数据</span></span><br><span class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">            resolveClass(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="如何破坏双亲委派机制"><a href="#如何破坏双亲委派机制" class="headerlink" title="如何破坏双亲委派机制"></a>如何破坏双亲委派机制</h2><p>就我所了解的</p>
+<ul>
+<li>自定义ClassLoader，重写 LoadClass方法</li>
+</ul>
+<blockquote>
+<p>由上面的加载方法也可以看出，双亲委派机制是在LoadClass方法中完成的，那么可想而知，不用他原有的逻<br>辑，这样不就可以破坏双亲委派了吗？在JDK1.2之前，在自定义类加载器时，总会去继承ClassLoader类并重写loadClass()方法，从而实现自定义的类加载类，但是在JDK1.2之后已不再建议用户去覆盖loadClass()方法，而是建议把自定义的类加载逻辑写在findclass()方法中</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>JVM</category>
+        <category>源码</category>
+      </categories>
+  </entry>
+  <entry>
     <title>栈实现队列</title>
     <url>/2021/10/18/%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<h1 id="使用栈实现队列"><a href="#使用栈实现队列" class="headerlink" title="使用栈实现队列"></a>使用栈实现队列</h1><ul>
