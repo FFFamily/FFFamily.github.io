@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":{"home":"/","about":"/about","tags":"/tags"}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="从输入URL到结果返回 涉及网络协议特别是TCP协议和HTTP协议，DNS解析等等知识点贯穿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从输入URL到结果返回">
+<meta property="og:url" content="http://yoursite.com/2021/10/21/%E8%BE%93%E5%85%A5URL%E5%88%B0%E7%BB%93%E6%9E%9C%E8%BF%94%E5%9B%9E/index.html">
+<meta property="og:site_name" content="一个人的姐姐">
+<meta property="og:description" content="从输入URL到结果返回 涉及网络协议特别是TCP协议和HTTP协议，DNS解析等等知识点贯穿">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/.com//TCP%E5%A4%B4%E9%83%A8.png">
+<meta property="og:image" content="http://yoursite.com/.com//3%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="og:image" content="http://yoursite.com/.com//2%E6%AC%A1%E6%8F%A1%E6%89%8B.png">
+<meta property="og:image" content="http://yoursite.com/.com//%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png">
+<meta property="og:image" content="http://yoursite.com/.com//%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82.png">
+<meta property="og:image" content="http://yoursite.com/.com//%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%9C.png">
+<meta property="article:published_time" content="2021-10-21T02:42:00.000Z">
+<meta property="article:modified_time" content="2021-10-21T02:46:12.233Z">
+<meta property="article:author" content="TuTu&#39;S Blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/.com//TCP%E5%A4%B4%E9%83%A8.png">
+
+<link rel="canonical" href="http://yoursite.com/2021/10/21/%E8%BE%93%E5%85%A5URL%E5%88%B0%E7%BB%93%E6%9E%9C%E8%BF%94%E5%9B%9E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>从输入URL到结果返回 | 一个人的姐姐</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1c67363e244f1aa79d61f0d490098134";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">一个人的姐姐</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于作者</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/21/%E8%BE%93%E5%85%A5URL%E5%88%B0%E7%BB%93%E6%9E%9C%E8%BF%94%E5%9B%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/timg.jpg">
+      <meta itemprop="name" content="TuTu'S Blog">
+      <meta itemprop="description" content="The only one people just for you!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个人的姐姐">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从输入URL到结果返回
+        </h1>
+
+        <div class="post-meta">
+		
+			 
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-10-21 10:42:00 / 修改时间：10:46:12" itemprop="dateCreated datePublished" datetime="2021-10-21T10:42:00+08:00">2021-10-21</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="从输入URL到结果返回"><a href="#从输入URL到结果返回" class="headerlink" title="从输入URL到结果返回"></a>从输入URL到结果返回</h1><ul>
+<li>涉及网络协议特别是TCP协议和HTTP协议，DNS解析等等知识点贯穿</li>
+</ul>
+<a id="more"></a>
+
+<h2 id="一，输入URL"><a href="#一，输入URL" class="headerlink" title="一，输入URL"></a>一，输入URL</h2><p>首先是理解URL，了解其组成</p>
+<p>可以把URL分割成几个部分：协议、网络地址、资源路径</p>
+<blockquote>
+<p><strong>传送协议</strong>： URL包含协议部分，是浏览器和www万维网之间的沟通方式，它会告诉浏览器正确在网路上找到资源位置</p>
+<p>最常见的网络传输协议的是HTTP协议（超文本传输协议）（ https则是进行加密的网络传输）；其他也还有ftp 、file、 https、mailto 、git 等。还有自定义的协议（私有协议），例如tencent。不同协议有不同的通讯内容格式。</p>
+<p><strong>网络地址</strong>： 指示该连接网络上哪一台计算机，可以是域名或者IP地址，可以包括端口号；</p>
+<p><strong>资源路径</strong>： 指示从服务器上获取哪一项资源。</p>
+</blockquote>
+<p>例如：  <a href="http://www.tutu.com/a" target="_blank" rel="noopener">http://www.tutu.com/a</a></p>
+<ul>
+<li>协议部分：http</li>
+<li>网络地址：<a href="http://www.tutu.com" target="_blank" rel="noopener">www.tutu.com</a></li>
+<li>资源路径：/a</li>
+</ul>
+<h2 id="二，URL解析"><a href="#二，URL解析" class="headerlink" title="二，URL解析"></a>二，URL解析</h2><p>我们输入的其实是域名，不是真正的地址，所以需要有解析的操作，解析成真实的地址，也就是IP地址</p>
+<blockquote>
+<p><strong>IP 地址</strong>：IP 协议为互联网上的每一个网络和每一台主机分配的一个逻辑地址。IP 地址如同门牌号码，通过 IP 地址才能确定一台主机位置。服务器本质也是一台主机，想要访问某个服务器，必须先知道它的 IP 地址。</p>
+<p><strong>域名 DN（domain name ）</strong>：域名是为了识别主机名称和组织机构名称的一种具有分层的名称。 IP 地址由四个数字组成，中间用点号连接，在使用过程中难记忆且易输错，所以用我们熟悉的字母和数字组合来代替纯数字的 IP 地址</p>
+<p><strong>计算机域名系统 DNS （ Domain Name System or Domain Name Service）</strong></p>
+<p>它是由域名解析器和域名服务器组成的。 域名服务器是指保存有该网络中所有主机的域名和对应IP地址，并具有将域名转换为IP地址功能的服务器。 </p>
+<p>每个域名都对应一个或多个提供相同服务的服务器的 IP 地址，只有知道服务器 IP 地址才能建立连接，所以需要通过 DNS 把域名解析成一个 IP 地址。</p>
+</blockquote>
+<p>具体是怎么解析呢？</p>
+<p>首先是 查询浏览器的DNS缓存，看看以前访问过没</p>
+<p>再查询 系统中的DNS缓存，维护一张域名与IP地址对应表</p>
+<p>再去看本机的HOST文件，里面有 ip 与 域名的映射</p>
+<p>接着就会去查询DNS本地的缓存，没有则会把域名发送给本地区域服务器，看能不能找到，找不得则发起一个==迭代的DNS请求==</p>
+<p>这里就涉及一个==DNS的迭代查询和递归查询==</p>
+<blockquote>
+<p><strong>递归查询</strong>：客户端与服务器之间属于递归查询，即当客户机想DNS服务器发出请求后，若DNS服务器本身不能解析，会向另一个DNS服务器发出查询请求，最后将结果转交给客户端的过程。 服务器必须回答目标IP与域名的映射关系。</p>
+<p><strong>迭代查询</strong>：DNS服务器之间属于迭代查询。服务器接收到一次迭代查询回复一次结果，这个结果不一定死目标IP与域名的映射关系，也可以是其他DNS服务器的地址。</p>
+</blockquote>
+<h2 id="三，请求"><a href="#三，请求" class="headerlink" title="三，请求"></a>三，请求</h2><p>知道ip地址之后，就需要请求访问了</p>
+<p>由于TCP/IP模型分四层，所以在发送数据时，每层都要对其进行封装</p>
+<blockquote>
+<p>接收端则反之一步步解除封装，最终拿到HTTP数据</p>
+</blockquote>
+<p>应用层 = 》 HTTP数据</p>
+<p>传输层 = 》TCP 首部</p>
+<p>网络层 = 》 IP首部</p>
+<p>链路层 = 》以太网首部</p>
+<p>这里涉及TCP头部封装后的数据报文格式如下</p>
+<blockquote>
+<p>这里也涉及</p>
+<p><strong>TCP怎么保证通讯的可靠机制的？</strong></p>
+</blockquote>
+<p><img src="/.com//TCP%E5%A4%B4%E9%83%A8.png" alt></p>
+<p>解读头部</p>
+<ul>
+<li>源端口：源端口的作用是标识==报文的发送地址==【2字节】</li>
+<li>目的端口：指明==接收方==的==应用程序端口==【2字节】</li>
+</ul>
+<blockquote>
+<p>TCP报头中的 源端口号 和 目的端口号 同 IP数据报 中的 源IP 与 目的IP <strong>唯一确定</strong>一条TCP连接</p>
+</blockquote>
+<ul>
+<li>序号：是TCP==可靠传输的关键部分==【4字节】<ul>
+<li>首部中的序列号字段是指本报文字段所发送的数据的第一个字节的序号</li>
+<li>比如：一个报文的序号字段为301，携带的数据有100，也就是说最后一个报文的序号为400，显然下一个报文的序号得从401开始</li>
+<li>这个字段的名称也称为“报文段序号”</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>在一个TCP连接中传送的字节流中的每一个字节都要按顺序编号，整个要传送的字节流的起始序号必须在连接建立时设置。</p>
+</blockquote>
+<ul>
+<li>确认号：期望收到对方的下一个报文段的第一个数据自己的序号【4位】<ul>
+<li>确认号只有当ACK标志为1时，才有效。比如建立连接时，SYN报文的ACK标志为0</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>比如：</p>
+<p>A收到B的字段，序号为501，数据长度为200，也就是接收了序号到700为止的数据</p>
+<p>所以，A期望下一个报文序号为701，于是A将发送给B的确认报文段中把确认号置为701</p>
+<p>同时</p>
+<p>如果确认号=N，证明N-1千的数据都被正确接收</p>
+</blockquote>
+<ul>
+<li>数据偏移：指出TCP报文的数据距离TCP报文段的起始处有多远【4位】<ul>
+<li>实际上就是指出TCP报文段的首部长度</li>
+<li>因为首部有长度不确定的选项字段，因此数据偏移字段是必要的</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>数据偏移为4位，能表示到15，也就是最大值为60字节，也就是TCP首部的最大长度，选项长度不能超过40字节《计算机网络 第7版》</p>
+</blockquote>
+<ul>
+<li><p>保留：保留今后使用，但<strong>目前应都位0</strong>【6位】</p>
+</li>
+<li><p>控制位：用来说明本报文段的性质 =》URG、ACK、PSH、RST、SYN、FIN</p>
+<ul>
+<li>URG 紧急：当URG=1时，表明紧急指针字段有效。告诉系统<strong>此报文段中有紧急数据</strong></li>
+<li>ACK  确认：<strong>当ACK=1时，确认号字段才有效，ACK=0，确认号无效</strong>。TCP规定，在连接建立后所有报文的传输都必须把ACK置1</li>
+<li>PSH 推送 ：当两个应用进程进行交互式通信时，有时在一端的应用进程希望在键入一个命令后立即就能收到对方的响应，这时候就将PSH=1，接收方收到PSH=1的消息时，会尽快的交付接收应用程序，而不是等到整个缓存都填满了后再交付、</li>
+</ul>
+<blockquote>
+<p>很少使用推送</p>
+</blockquote>
+<ul>
+<li>RST 复位：当RST=1，表明TCP连接中出现严重差错，<strong>必须释放连接，然后再重新建立连接</strong></li>
+<li>SYN 同步：在连接建立时用来同步序号。当SYN=1，ACK=0，表明是连接请求报文，若同意连接，则响应报文中应该使SYN=1，ACK=1</li>
+<li>FIN：终止，用来释放连接。当FIN=1，表明此报文的发送方的数据已经发送完毕，并且要求释放</li>
+</ul>
+</li>
+<li><p>窗口：<strong>滑动窗口</strong>大小，用来告知发送端<strong>接受端的缓存大小</strong>，以此控制发送端发送数据的速率，从而达到流量控制。窗口大小时一个16bits字段，因而窗口大小最大为65535。窗口值告诉对方，从本报文的段首部中的确认号算起，接收方目前允许对方发送的数据量。之所以有这个限制，是应为接收方的数据缓存空间是有限的。</p>
+<ul>
+<li>总之，窗口值作为接收方让发送端设置其发送窗口的依据</li>
+</ul>
+</li>
+<li><p>校验和：奇偶校验，此校验和是对整个的 TCP 报文段，包括 TCP 头部和 TCP 数据，以 16 位字进行计算所得。由发送端计算和存储，并由接收端进行验证</p>
+</li>
+<li><p>紧急指针：只有当 <strong>URG 标志置 1 时紧急指针才有效</strong>。紧急指针是一个正的偏移量，和顺序号字段中的值相加表示紧急数据最后一个字节的序号。 TCP 的紧急方式是发送端向另一端发送紧急数据的一种方式</p>
+<ul>
+<li>值得注意的是，窗口值为0也可以发送紧急数据</li>
+</ul>
+</li>
+<li><p><strong>选项和填充</strong>：最常见的可选字段是最长报文大小，又称为MSS（Maximum Segment Size），每个连接方通常都在通信的第一个报文段（为建立连接而设置SYN标志为1的那个段）中指明这个选项，它表示本端所能接受的最大报文段的长度。选项长度不一定是32位的整数倍，所以要加填充位，即在这个字段中加入额外的零，==以保证TCP头是32的整数倍==</p>
+</li>
+<li><p>数据部分： TCP 报文段中的数据部分是可选的。<strong>在一个连接建立和一个连接终止时，双方交换的报文段仅有 TCP 首部</strong>。如果一方没有数据要发送，也使用没有任何数据的首部来确认收到的数据。在处理超时的许多情况中，也会发送不带任何数据的报文段</p>
+</li>
+</ul>
+<p>要发送的内容准备好了，现在可以连接了</p>
+<h3 id="1，TCP连接"><a href="#1，TCP连接" class="headerlink" title="1，TCP连接"></a>1，TCP连接</h3><p>要想请求资源，HTTP协议首先是要求建立连接，也就是TCP的三次握手，需要在客户和服务端之间交换三个TCP报文段</p>
+<p>第一次握手：客户端首先胡创建==传输控制模块TCB== ，然后发送<code>SYN=1，初始序号：seq=X</code>的数据包给服务端，此时，客户端进入<code>SYN-SENT（同步已发送）</code>状态</p>
+<blockquote>
+<p>TCP规定。SYN数据报不能携带数据，但是消耗一个序号</p>
+</blockquote>
+<p>第二次握手：服务端收到请求报文后，如果同意连接，则向客户端发送给确认报文<code>SYN=1,ACK=1，确认号：ack=X+1</code>的数据包，同时为自己选择一个初始序号<code>seq=Y</code>，发送之后服务端进入<code>SYN-RCVD（同步收到）</code>状态</p>
+<blockquote>
+<p>这个报文也不能携带数据，也消耗一个序号</p>
+</blockquote>
+<p>第三次握手：客户端收到确认后，也要给服务端确认。客户端返回<code>ACK=Y+1，确认号：ack=Y+1</code>数据包，序号为<code>X+1</code>，这个时候客户端进入<code>ESTABLISHED</code>状态,此时，TCP连接以及建立，当服务端收到确认后，也进入<code>ESTABLISHED</code>状态</p>
+<blockquote>
+<p>TCP规定。ACK报文可以携带数据，但是如果不携带数据则不消耗序号，也就是说下一个序号还是<code>X+1</code></p>
+</blockquote>
+<p><img src="/.com//3%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt></p>
+<p>额外注意</p>
+<p>（1）服务端第一次接收客户端的SYN报文时，返回的报文可以拆分成2个，先是<code>ACK=1,ack=x+1</code>，再是<code>SYN=1,seq=Y</code>，这样也就是 “4次握手”</p>
+<p>（2）<strong>握手过程中传送的包里不包含数据</strong>，三次握手完毕后，客户端与服务器才正式开始传送数据。理想状态下，TCP连接一旦建立，在通信双方中的任何一方主动关闭连接之前，TCP 连接都将被一直保持下去。</p>
+<p>提问</p>
+<p><strong>为什么不是两次握手呢？</strong></p>
+<blockquote>
+<p>明明服务端已经接收了请求，并且发送了确认报文以及SYN同步报文，为什么这个时候还不能发消息呢？</p>
+</blockquote>
+<p>这主要是为了防止已经失效的连接请求报文段突然又传送到了服务端，而产生错误 –《计算机网络 谢希仁》</p>
+<p>为了解决“网络中存在延迟的重复分组”的问题  –《计算机网络》 </p>
+<blockquote>
+<p>这是为了<strong>避免服务器建立无用连接</strong>（客户端服务器建立连接后，却不传输数据）</p>
+<p>如果只进行两次握手，如果客户端向服务器第一次发送的建立连接的请求因为某原因，<strong>兜兜转转绕了一大圈才到达服务器</strong>。这期间客户端因为未收到服务器的响应，就会再次发送连接请求，这时服务器收到了，向客户端发送连接请求后，连接便建立了。然后数据传输完毕后，释放连接。<strong>这时刚刚兜兜转转一大圈的建立连接的请求到了服务器</strong>，服务器收到后再次向客户端发送请求，发送后又建立了连接，但是建立连接后客户端没有再理会服务器，客户端与服务器之间没有传输数据，此时服务器的资源就会被浪费</p>
+</blockquote>
+<p><img src="/.com//2%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt></p>
+<p>提问</p>
+<p>为什么不能是四次握手呢？</p>
+<blockquote>
+<p>我参考的资料中是这么解释的：<a href="https://nyimac.gitee.io/2020/12/10/URL访问服务器流程/#三、建立TCP连接" target="_blank" rel="noopener">从输入URL到浏览器显示页面的流程 - Nyima’s Blog (gitee.io)</a></p>
+</blockquote>
+<p><strong>因为通信不可能100%可靠</strong>（红军蓝军约定）， 而上面的三次握手已经做好了通信的准备工作， <strong>再增加握手， 并不能显著提高可靠性</strong>，所以只需要三次握手就足够了</p>
+<p>这里简单介绍一下<strong>红军蓝军约定</strong></p>
+<blockquote>
+<p>红军和蓝军都想消灭一波敌人，但是单凭他们一个军队的力量都不足以消灭这波敌人，因此他们想到了一起合作，于是红军向蓝军发了一封电报，内容是约定好早上8点一起向敌军进攻，由于他们不确定蓝军是否一定能收到电报, 所以只有收到蓝军的回复之后才会进行进攻，而蓝军也是同样的想法，因为他们不确定红军一定能收到自己的回复而在约定好的时间发动进攻，所以他们只有收到红军的回复后才发动进攻….</p>
+<p>问怎样才能保证这次战役一定胜利呢？答案是不可能的，因为<strong>双方都对于自己发出的消息对方是否一定接收得到存在质疑</strong>，所以，这样的通信将一直进行下去，结果将是使胜利的几率一直接近100%，但是却永远达不到100%。</p>
+</blockquote>
+<p>另一个简单回答</p>
+<p>我们都知道，请求资源中TCP连接比较消耗资源，按道理次数应该更少，避免浪费</p>
+<p><strong>如果四次，那么就造成了浪费，因为在三次结束之后，就已经可以保证A可以给B发信息，A可以收到B的信息； B可以给A发信息，B可以收到A的信息</strong></p>
+<h3 id="2，HTTP请求"><a href="#2，HTTP请求" class="headerlink" title="2，HTTP请求"></a>2，HTTP请求</h3><p>在建立好连接之后，就可以发送HTTP请求了</p>
+<blockquote>
+<p>HTTP超文本协议：在浏览器和服务器之间的请求和响应的交互，必须按照规定的格式和遵循一定的规则。这些格式和规定就是超文本传输协议 HTTP</p>
+</blockquote>
+<p>请求报文结构如下</p>
+<p><img src="/.com//%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png" alt></p>
+<blockquote>
+<p>有人提到过这一步下还有一个查询MAC地址的操作，即，ARP协议</p>
+</blockquote>
+<p>我们知道，网络层使用的IP地址，但是在实际网络的链路上传送数据帧时，最终还是必须使用该网络的硬件地址</p>
+<p>ARP协议的作用，就是为了从网络层使用的IP地址，解析出在数据链路层使用的硬件地址</p>
+<p>那么问题来了：为什么不直接使用MAC地址，而是使用抽象的IP？</p>
+<blockquote>
+<p>全世界有着各种各样的网络，他们使用不用的硬件技术。要想使得这些异构网络能互相通信，就必须进行非常复杂的硬件地址转换工作，因此由用户主机来完成这样的事是不可能的。但是IP编址就不一样了，连接互联网的主机都有一个唯一的IP，他们的通信非常简单。而调用ARP的复杂过程由计算机软件自动完成，用户来说不可见</p>
+<p>《计算机网络 第7版》</p>
+</blockquote>
+<p>以上，都是属于计算机网络层面的知识</p>
+<h3 id="3，服务器处理请求"><a href="#3，服务器处理请求" class="headerlink" title="3，服务器处理请求"></a>3，服务器处理请求</h3><p>服务器端收到请求后的由web服务器（准确说应该是http服务器）处理请求</p>
+<p>web服务器解析用户请求，知道了需 要调度哪些资源文件，再通过相应的这些资源文件处理用户请求和参数，并调用数据库信息，最后将结果通过web服务器返回给浏览器客户端。</p>
+<p><img src="/.com//%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82.png" alt></p>
+<blockquote>
+<p>我想，很多时候都是使用的TomCat作为web服务器</p>
+<p>或者：Apache、Nginx、LLS</p>
+</blockquote>
+<p>他们会接收请求，并且将其投送到特定的应用</p>
+<p>以常用的<code>Spring Web</code>为例</p>
+<p>Spring MVC 中的 DispatcherServlet 充当了 Web 应用中的 Serlvet，负责将任务分配给对应的Controller，并将最终视图返回给 Web 容器</p>
+<blockquote>
+<p>这里就不涉及MVC的处理请求过程了</p>
+</blockquote>
+<h3 id="4，服务器响应请求"><a href="#4，服务器响应请求" class="headerlink" title="4，服务器响应请求"></a>4，服务器响应请求</h3><p>服务器处理完请求后，就会发送响应结果</p>
+<p><img src="/.com//%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%9C.png" alt></p>
+<p>同时附带对应的状态码</p>
+<h2 id="四，关闭"><a href="#四，关闭" class="headerlink" title="四，关闭"></a>四，关闭</h2><h3 id="1，关闭TCP连接"><a href="#1，关闭TCP连接" class="headerlink" title="1，关闭TCP连接"></a>1，关闭TCP连接</h3><p>关闭TCP连接，也就是所谓的四次挥手</p>
+<p>关闭之前，先阐述两者的状态，都是处于 <code>ESTABLISHED</code>状态</p>
+<p>第一次挥手：客户端发送 <code>FIN = 1,seq = u</code>的连接释放报文段，此后客户端停止发送数据，主动关闭TCP连接。并进入<code>FIN-WAIT-1（终止等待1）状态</code>    </p>
+<blockquote>
+<p>在FIN报文之前发送出去的数据，如果没有收到对应的ack确认报文，客户端依然会重发这些数据</p>
+<p>seq=u：u等于前面已经传送过来的数据的最后一个字节的序号加1</p>
+<p>TCP规定，FIN报文段即使不携带数据，也要消耗一个序号</p>
+</blockquote>
+<p>第二次挥手：服务器收到<code>连接释放FIN报文</code>后，发送一个  <code>ACK = 1</code>给对方并且带上自己的序列号<code>seq = v</code>。此时，<strong>服务端就进入了CLOSE-WAIT</strong>（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，<strong>但是服务器若发送数据，客户端依然要接受</strong>。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间</p>
+<p>客户端收到后，进入<strong>FIN-WAIT-2</strong>（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）</p>
+<p>第三次挥手：在服务器器已经没有消息发送给客户端时，这个时候就会同时TCP释放连接。服务器必须发送<code>FIN=1释放报文</code>，以及确认号必须是上次发送过的确认号<code>ack=u+1</code>用来关闭服务器到客户端的数据传送，也就是通知客户端，可以真正地释放连接了。由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，<strong>服务器就进入了LAST-ACK</strong>（最后确认）状态，等待客户端的确认</p>
+<p>第四次挥手：客户端收到消息后，必须发送确认报文，ACK=1，确认号ack= w+1，自己的序号为 seq = u+1（因为上一个FIN报文是u），客户端进入<code>TIME-WAIT(时间等待)状态</code>。</p>
+<p>此时，服务端收到客户端的确认报文，就会进入<code>CLOSE</code> 状态，撤销TCB后，就结束了这次的TCP连接</p>
+<p>但是，此时TCP连接没有断开，客户端<strong>必须经过时间等待计时器（Time-Wait timer）设置的时间2MSL后</strong>，且客户端撤销相应的TCB后，才进入CLOSED状态，也就是结束了此次TCP连接</p>
+<blockquote>
+<p>时间MSL叫做最长报文寿命（Maximum Segment Lifetime），RFC 793建议是设置为2分钟，报文在网络上存在的最长时间，超过这个时间报文将被丢弃</p>
+<p>TCP允许不同的实现可以根据具体情况使用更小的MSL值</p>
+<p>所以 2MSL 就是 4分钟，4分钟后，客户端才会进入 CLOSE 状态</p>
+</blockquote>
+<p>提问</p>
+<p><strong>为什么必须要等待2MSL呢？</strong></p>
+<blockquote>
+<p>一，<strong>保证客户端发送的最后一个ACK报文能够到达服务器</strong>，因为这个ACK报文可能丢失。服务器在发送 ACK-FIN 报文后，一定时间后依旧没有收到确认报文，服务器就会超时重传这个 ACK-FIN 报文，如果客户端在这个2MSL时间内收到了这个重传的ACK-FIN请求报文。这时就重传一次确认，重新启动2MSL计时器。最后，都进入 CLOSE 状态</p>
+<p>如果不等这个2MSL，发送 ACK 报文之后，就释放了。那么就有可能收不到 重传的 ACK-FIN 报文，也就不会发送确认报文，这样服务器就进入不了 CLOSE 状态</p>
+<p>二，防止类似与三次握手中提到了的<strong>已经失效的连接请求报文段</strong>出现在本连接中。客户端发送完最后一个确认报文后，在这个2MSL时间中，就可以<strong>使本连接持续的时间内所产生的所有报文段都从网络中消失</strong>（最长生存MSL）。<strong>这样新的连接中不会出现旧连接的请求报文</strong></p>
+</blockquote>
+<h2 id="五，浏览器加载"><a href="#五，浏览器加载" class="headerlink" title="五，浏览器加载"></a>五，浏览器加载</h2><p>这一步就是浏览器的加载，解析，渲染</p>
+<ul>
+<li>解析html，生成dom树</li>
+<li>解析css，生成cssom树</li>
+<li>将dom树和cssom树合并，生成渲染树</li>
+<li>遍历渲染树，开始布局和计算</li>
+<li>绘制渲染树，显示到屏幕</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/18/%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6/" rel="prev" title="双亲委派机制">
+      <i class="fa fa-chevron-left"></i> 双亲委派机制
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#从输入URL到结果返回"><span class="nav-number">1.</span> <span class="nav-text">从输入URL到结果返回</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一，输入URL"><span class="nav-number">1.1.</span> <span class="nav-text">一，输入URL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二，URL解析"><span class="nav-number">1.2.</span> <span class="nav-text">二，URL解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三，请求"><span class="nav-number">1.3.</span> <span class="nav-text">三，请求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1，TCP连接"><span class="nav-number">1.3.1.</span> <span class="nav-text">1，TCP连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2，HTTP请求"><span class="nav-number">1.3.2.</span> <span class="nav-text">2，HTTP请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3，服务器处理请求"><span class="nav-number">1.3.3.</span> <span class="nav-text">3，服务器处理请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4，服务器响应请求"><span class="nav-number">1.3.4.</span> <span class="nav-text">4，服务器响应请求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四，关闭"><span class="nav-number">1.4.</span> <span class="nav-text">四，关闭</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1，关闭TCP连接"><span class="nav-number">1.4.1.</span> <span class="nav-text">1，关闭TCP连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五，浏览器加载"><span class="nav-number">1.5.</span> <span class="nav-text">五，浏览器加载</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="TuTu'S Blog"
+      src="/images/timg.jpg">
+  <p class="site-author-name" itemprop="name">TuTu'S Blog</p>
+  <div class="site-description" itemprop="description">The only one people just for you!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/Li_Tu" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;Li_Tu" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://github.com/fffamily" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fffamily" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+	  
+	
+	<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+	<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+	<div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/2020/" rel="tag">2020</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA%E5%9F%BA%E7%A1%80/" rel="tag">JAVA基础</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RabbitMQ/" rel="tag">RabbitMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%87%E7%AD%BE%E4%BA%91/" rel="tag">标签云</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+  </span>
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TuTu'S Blog</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">53k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:36</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.6.0
+  </div>
+
+
+<span id="sitetime"></span>
+<script language=javascript>
+  function siteTime(){
+    window.setTimeout("siteTime()", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+    var today = new Date();
+    var todayYear = today.getFullYear();
+    var todayMonth = today.getMonth()+1;
+    var todayDate = today.getDate();
+    var todayHour = today.getHours();
+    var todayMinute = today.getMinutes();
+    var todaySecond = today.getSeconds();
+    /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+    year - 作为date对象的年份，为4位年份值
+    month - 0-11之间的整数，做为date对象的月份
+    day - 1-31之间的整数，做为date对象的天数
+    hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+    minutes - 0-59之间的整数，做为date对象的分钟数
+    seconds - 0-59之间的整数，做为date对象的秒数
+    microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+    var t1 = Date.UTC(2020,01,01,00,00,00); //这里调整博客建站时间，时间：2019-05-14 00:00:00
+    var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+    var diff = t2-t1;
+    var diffYears = Math.floor(diff/years);
+    var diffDays = Math.floor((diff/days)-diffYears*365);
+    var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+    var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+    var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+    document.getElementById("sitetime").innerHTML=" 已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+  }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+  siteTime();
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+	
+  
+   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas> 
+   <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script> 
+   <script type="text/javascript" src="/js/fireworks.js"></script>
+  
+   <!-- 雪花特效 -->
+<script type="text/javascript" src="http://libs.baidu.com/jquery/1.8.3/jquery.js"></script>
+<script type="text/javascript" src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+<!--<script type="text/javascript" src="/js/snow.js"></script>--->
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":1}});</script></body>
+</html>
