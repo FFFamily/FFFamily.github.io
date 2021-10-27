@@ -1,6 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ThreadLocal的使用</title>
+    <url>/2021/10/27/hreadLocal%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="ThreadLocal的使用"><a href="#ThreadLocal的使用" class="headerlink" title="ThreadLocal的使用"></a>ThreadLocal的使用</h1><ul>
+<li>ThreadLocal 源码解读</li>
+<li>InheritableThreadLocal 源码解读</li>
+</ul>
+<a id="more"></a>
+<p>基本测试使用代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLoaclDemo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> ThreadLocal&lt;String&gt; threadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">    <span class="keyword">static</span> String test = <span class="string">"hello"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt;&#123;</span><br><span class="line">            threadLocal.set(<span class="string">"hello threadLocal1"</span>);</span><br><span class="line">            test += <span class="string">"1"</span>;</span><br><span class="line">            System.out.println(threadLocal.get());</span><br><span class="line">            System.out.println(test);</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt;&#123;</span><br><span class="line">            threadLocal.set(<span class="string">"hello threadLocal2"</span>);</span><br><span class="line">            test += <span class="string">"2"</span>;</span><br><span class="line">            <span class="comment">//threadLocal.remove(); 清除当前线程的本地内存中的 localVariable</span></span><br><span class="line">            System.out.println(threadLocal.get());</span><br><span class="line">            System.out.println(test);</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们通常引出 <code>ThradLocal</code>，是考虑了这样的场景</p>
+<blockquote>
+<p>在多线程处理共享变量时，都会存在着安全问题，，为了保证安全，通常会进行适当的同步操作</p>
+<p>而同步的一般措施是：加锁</p>
+<p>锁在保证着安全的同时，也会存在相关的效率和并发问题</p>
+<p>那有没这样的变量，线程拿到后都是使用的自己的呢？</p>
+</blockquote>
+<p>顺着这样的想法，很容易让人觉得，我们使用<code>ThreadLocal</code>，那么线程的本地变量就是存放在 <code>ThreadLocal</code>实例中，每个线程访问自己的变量，就是去 <code>ThreadLocal</code>通过当前线程实例拿到数据。</p>
+<p>其实不是</p>
+<p>线程的本地变量是存放在当前线程（调用线程）的 <code>threadlocals</code>中</p>
+<p>通过源码，我们发现，Thread 类中有两个变量</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下是为 <code>null</code>的，但是会在线程第一次调用 <code>ThradLocal</code>类的<code>set</code>或者<code>get</code>方法时，才会创建</p>
+<p>先分析 <code>set</code>  、<code>get</code>、  <code>remove</code>方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取当前线程</span></span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    <span class="comment">// 拿到当前用户线程的 threadLocalMap threadLocals</span></span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="comment">// 如果 threadLocals 不为空</span></span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 从threadLocals中拿到当前线程本地变量中的值</span></span><br><span class="line">        <span class="comment">// key 是 当前 ThreadLocal 实例</span></span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// threadLocals 为空，则初始化当前线程的threadLocals成员变量</span></span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>–</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> T <span class="title">setInitialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 初始化为 null</span></span><br><span class="line">    T value = initialValue();</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        map.set(<span class="keyword">this</span>, value);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        createMap(t, value);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>通过源码发现，首先是获取当前线程，在用当前线程去调用<code>getMap</code>方法，去获取当前线程自己的变量（<code>threadlocal</code>）,其被绑定到了线程的成员变量上</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看<code>set</code>，源码也类似</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 424 行</span></span><br><span class="line">        <span class="comment">// 将值存入 threadlocals 中</span></span><br><span class="line">        map.set(<span class="keyword">this</span>, value);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        createMap(t, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>remove</code>方法就是将 当前线程的 <code>threadlocals</code> 中的 <code>ThreadLocal</code>实例移除</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ThreadLocalMap m = getMap(Thread.currentThread());</span><br><span class="line">    <span class="keyword">if</span> (m != <span class="keyword">null</span>) &#123;</span><br><span class="line">        m.remove(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>通过这三个方法可以知道，其实 <code>ThreadLocal</code> 充当着的是一个工具类的作用</p>
+<p>其并没有去过多的操控本类中的元素</p>
+<p>而是变相的去使用当前线程中的 <code>threadlocals</code></p>
+<p>他调用 <code>set</code> 方法，将value 存入 调用线程的<code>threadlocals</code>中，调用 <code>get</code>方法取出来</p>
+<p>如果调用线程一直不终止，那么存在<code>threadlocals</code>中的变量一直不会移除，这样就会有内存溢出的可能，所以适用后需要调用 <code>ThreadLocal</code>中的<code>remove</code>方法删除对应线程的 <code>threadlocals</code>中的本地变量</p>
+<blockquote>
+<p>为何是map结构呢？</p>
+<p>因为每个线程不止一个 ThreadLocal 变量</p>
+</blockquote>
+<p><code>ThreadLocal</code>也有一个短板，那就是 父子线程中无法使用 <code>ThreadLocal</code>共享</p>
+<blockquote>
+<p>觉得这也不是 <code>ThreadLocal</code> 的短板，因为<code>ThreadLocal</code>，操作都是建立在当前线程</p>
+</blockquote>
+<p>那么 <code>InheritableThreadLocal</code>因运而生</p>
+<p>源码中就只有三个方法，也就是 重写的<code>ThreadLocal</code>的三个方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InheritableThreadLocal</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">ThreadLocal</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> T <span class="title">childValue</span><span class="params">(T parentValue)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> parentValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取也是 inheritableThreadLocals</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> t.inheritableThreadLocals;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重写 createMap 方法，创建的不再是 threadlocals 而是 inheritableThreadLocals</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">createMap</span><span class="params">(Thread t, T firstValue)</span> </span>&#123;</span><br><span class="line">        t.inheritableThreadLocals = <span class="keyword">new</span> ThreadLocalMap(<span class="keyword">this</span>, firstValue);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要想了解 <code>InheritableThreadLocal</code> 是如何让子线程访问父线程变量时，需要从<code>Thread</code> 的构造方法开始</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Thread</span><span class="params">(Runnable target)</span> </span>&#123;</span><br><span class="line">    init(<span class="keyword">null</span>, target, <span class="string">"Thread-"</span> + nextThreadNum(), <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>追踪</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 使用当前AccessControlContext初始化线程。*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ThreadGroup g, Runnable target, String name,</span></span></span><br><span class="line"><span class="function"><span class="params">                  <span class="keyword">long</span> stackSize)</span> </span>&#123;</span><br><span class="line">    init(g, target, name, stackSize, <span class="keyword">null</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>追踪</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ThreadGroup g, Runnable target, String name,</span></span></span><br><span class="line"><span class="function"><span class="params">                  <span class="keyword">long</span> stackSize, AccessControlContext acc,</span></span></span><br><span class="line"><span class="function"><span class="params">                  <span class="keyword">boolean</span> inheritThreadLocals)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (name == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"name cannot be null"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="comment">// 获取当前线程</span></span><br><span class="line">    Thread parent = currentThread();</span><br><span class="line">	<span class="comment">/* 部分代码省略 */</span></span><br><span class="line">    <span class="comment">/*开始进入父子线程部分*/</span></span><br><span class="line">    <span class="keyword">if</span> (inheritThreadLocals &amp;&amp; parent.inheritableThreadLocals != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果父线程的 inheritableThreadLocals 不为空</span></span><br><span class="line">        <span class="comment">// 那就设置子线程中的 inheritableThreadLocals 变量</span></span><br><span class="line">        <span class="comment">// 使用父线程的 inheritableThreadLocals 作为构造函数，创建一个新的 ThreadLocalMap 变量，赋值给子线程的 inheritableThreadLocals</span></span><br><span class="line">        <span class="keyword">this</span>.inheritableThreadLocals =</span><br><span class="line">            ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.stackSize = stackSize;</span><br><span class="line">    tid = nextThreadID();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>追踪 <code>createInheritedMap</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> ThreadLocalMap <span class="title">createInheritedMap</span><span class="params">(ThreadLocalMap parentMap)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ThreadLocalMap(parentMap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再进<code>ThreadLocalMap</code>看看是怎么通过父线程的<code>ThreadLocalMap</code>构造的</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 构造一个新映射，其中包含来自给定父映射的所有可继承ThreadLocals</span></span><br><span class="line"><span class="comment">* 仅由createInheritedMap调用</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">ThreadLocalMap</span><span class="params">(ThreadLocalMap parentMap)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取实体</span></span><br><span class="line">    Entry[] parentTable = parentMap.table;</span><br><span class="line">    <span class="comment">// 获取数量</span></span><br><span class="line">    <span class="keyword">int</span> len = parentTable.length;</span><br><span class="line">    setThreshold(len);</span><br><span class="line">    table = <span class="keyword">new</span> Entry[len];</span><br><span class="line">    <span class="comment">// 复制，再封装</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; len; j++) &#123;</span><br><span class="line">        Entry e = parentTable[j];</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            ThreadLocal&lt;Object&gt; key = (ThreadLocal&lt;Object&gt;) e.get();</span><br><span class="line">            <span class="keyword">if</span> (key != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// 这里就是调用 InheritableThreadLocal 重写的childValue方法</span></span><br><span class="line">                Object value = key.childValue(e.value);</span><br><span class="line">                Entry c = <span class="keyword">new</span> Entry(key, value);</span><br><span class="line">                <span class="keyword">int</span> h = key.threadLocalHashCode &amp; (len - <span class="number">1</span>);</span><br><span class="line">                <span class="keyword">while</span> (table[h] != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    h = nextIndex(h, len);</span><br><span class="line">                &#125;</span><br><span class="line">                table[h] = c;</span><br><span class="line">                size++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这下就知道了</p>
+<p>当父线程创建子线程时，构造函数会把父线程中的 <code>inheritableThreadLocals</code> 的本地变量复制一份，保存在子线程中的 <code>inheritableThreadLocals</code>中</p>
+<blockquote>
+<p>inheritableThreadLocals 的使用场景</p>
+<p>子线程需要使用父线程中存放的用户登录信息</p>
+<p>中间件需要把统一的id追踪的整个调用链路记录</p>
+<p>《java并发编程之美》</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>JUC</category>
+        <category>源码</category>
+      </categories>
+  </entry>
+  <entry>
     <title>从输入URL到结果返回</title>
     <url>/2021/10/21/%E8%BE%93%E5%85%A5URL%E5%88%B0%E7%BB%93%E6%9E%9C%E8%BF%94%E5%9B%9E/</url>
     <content><![CDATA[<h1 id="从输入URL到结果返回"><a href="#从输入URL到结果返回" class="headerlink" title="从输入URL到结果返回"></a>从输入URL到结果返回</h1><ul>
