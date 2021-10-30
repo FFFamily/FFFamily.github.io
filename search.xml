@@ -1,6 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AQS分析</title>
+    <url>/2021/10/30/QS%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="AQS分析"><a href="#AQS分析" class="headerlink" title="AQS分析"></a>AQS分析</h1><ul>
+<li>AQS 结构分析</li>
+<li>AQS 相关方法分析<a id="more"></a>
+
+</li>
+</ul>
+<blockquote>
+<p>问题待补充</p>
+</blockquote>
+<p>什么是AQS? 为什么它是核心?</p>
+<p>AQS的核心思想是什么? 它是怎么实现的? 底层数据结构等</p>
+<p>AQS有哪些核心的方法?</p>
+<p>AQS定义什么样的资源获取方式? AQS定义了两种资源获取方式：<code>独占</code>(只有一个线程能访问执行，又根据是否按队列的顺序分为<code>公平锁</code>和<code>非公平锁</code>，如<code>ReentrantLock</code>) 和<code>共享</code>(多个线程可同时访问执行，如<code>Semaphore</code>、<code>CountDownLatch</code>、 <code>CyclicBarrier</code> )。<code>ReentrantReadWriteLock</code>可以看成是组合式，允许多个线程同时对某一资源进行读。</p>
+<p>AQS底层使用了什么样的设计模式? 模板</p>
+<p>AQS的应用示例?</p>
+<p>AQS是一个用来构建锁和同步器的框架，使用AQS能简单且高效地构造出应用广泛的大量的同步器</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>AbstractQueuedSynchronizer 继承于 AbstractOwnableSynchronizer</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractQueuedSynchronizer</span> <span class="keyword">extends</span> <span class="title">AbstractOwnableSynchronizer</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br></pre></td></tr></table></figure>
+
+<p>AbstractOwnableSynchronizer 定义了独占锁的设置以及获取</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setExclusiveOwnerThread</span><span class="params">(Thread thread)</span> </span>&#123;</span><br><span class="line">    exclusiveOwnerThread = thread;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> Thread <span class="title">getExclusiveOwnerThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> exclusiveOwnerThread;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>等待队列节点类  <code>Node</code></p>
+<p>内部类（条件变量）：<code>ConditionObject</code></p>
+<p>整体结构如上</p>
+<p>对个体单独分析</p>
+<h3 id="AbstractQueuedSynchronizer"><a href="#AbstractQueuedSynchronizer" class="headerlink" title="AbstractQueuedSynchronizer"></a>AbstractQueuedSynchronizer</h3><p>AbstractQueuedSynchronizer 是一个FIFO的双向队列，内部通过<code>head</code>和<code>tail</code>记录</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//等待队列的头，延迟初始化。除初始化外，它仅通过方法setHead进行修改  Note: If head exists, its waitStatus is guaranteed not to be CANCELLED.</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node head;</span><br><span class="line"></span><br><span class="line"><span class="comment">//等待队列的尾部，延迟初始化。仅通过方法enq修改以添加新的等待节点</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node tail;</span><br></pre></td></tr></table></figure>
+
+<p>AQS使用一个int成员变量来表示同步状态，通过内置的FIFO队列来完成获取资源线程的排队工作。AQS使用CAS对该同步状态进行原子操作实现对其值的修改。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//同步状态</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br></pre></td></tr></table></figure>
+
+<p>状态信息通过<code>getState</code>，<code>setState</code>，<code>compareAndSetState</code>进行操作</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 返回同步状态的当前值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getState</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> state;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 设置同步状态的值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(<span class="keyword">int</span> newState)</span> </span>&#123;</span><br><span class="line">    state = newState;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 原子地(CAS操作)将同步状态值设置为给定值update如果当前同步状态的值等于expect(期望值)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSetState</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.compareAndSwapInt(<span class="keyword">this</span>, stateOffset, expect, update);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意</p>
+<blockquote>
+<p>不同的锁实现对于static的定义不一样</p>
+<p>ReentrantLock 是可重入次数</p>
+<p>ReentrantReadWriteLock 是 state 高16代表读状态（读次数），以及低16位写锁的可重入次数</p>
+</blockquote>
+<p>对于AQS，==其线程同步的关键就是对状态值 <code>state</code>的操作==</p>
+<p>操作state的方式有 独占方式 和 共享方式，后续会讲到</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 等待队列节点类.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** 用来标记该线程时获取共享资源时被阻塞后放入AQS队列中 即共享模式 */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Node SHARED = <span class="keyword">new</span> Node();</span><br><span class="line">    <span class="comment">/** 用来标记该线程时获取独占资源时被阻塞后放入AQS队列中 即独占模式 */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Node EXCLUSIVE = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 表示当前的线程被取消*/</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CANCELLED =  <span class="number">1</span>;</span><br><span class="line">    <span class="comment">/** 表示当前节点的后继节点包含的线程需要运行，也就是unpark(线程需要被唤醒) */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIGNAL    = -<span class="number">1</span>;</span><br><span class="line">    <span class="comment">/** 表示当前节点在等待condition，也就是在condition队列（条件队列）中 */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CONDITION = -<span class="number">2</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 表示当前场景下后续的acquireShared能够得以执行，也就是释放共享资源后需要通知其他节点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PROPAGATE = -<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 记录线程的等待状态:SIGNAL、CANCELLED、CONDITION、PROPAGATE、0</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">int</span> waitStatus;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 前驱结点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">volatile</span> Node prev;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 后继结点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">volatile</span> Node next;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 结点所对应的AQS队列里面的线程</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">volatile</span> Thread thread;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 下一个等待结点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Node nextWaiter;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 结点是否在共享模式下等待</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isShared</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> nextWaiter == SHARED;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *  获取前驱结点，若前驱结点为空，抛出异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">final</span> Node <span class="title">predecessor</span><span class="params">()</span> <span class="keyword">throws</span> NullPointerException </span>&#123;</span><br><span class="line">        Node p = prev;</span><br><span class="line">        <span class="keyword">if</span> (p == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 省略构造方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ConditionObject-条件变量"><a href="#ConditionObject-条件变量" class="headerlink" title="ConditionObject 条件变量"></a>ConditionObject 条件变量</h3><p>理解条件变量这个概念</p>
+<p>可以从 wait和 notify说起，wait/notify锁的实现是需要配合synchronized的，在AQS中，signal/await同样也要配合锁（AQS实现的锁），以此实现同步</p>
+<blockquote>
+<p>signal/await 是 AQS中的方法</p>
+</blockquote>
+<p>但是，synchronized 只能针对一个共享变量，但是AQS的锁，可以对应多个条件变量</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"><span class="comment">// newCondition 在AQS内部声明一个ConditionObject 对象，可以访问AQS的内部变量</span></span><br><span class="line">Condition condition = lock.newCondition();</span><br><span class="line"><span class="comment">// 加锁</span></span><br><span class="line">lock.lock();</span><br><span class="line"><span class="comment">// 等待</span></span><br><span class="line">condition.await();</span><br><span class="line"><span class="comment">// 唤醒</span></span><br><span class="line">condition.signal();</span><br><span class="line"><span class="comment">// 释放锁</span></span><br><span class="line">lock.unlock();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里的Lock对象相当于 synchronized 加上共享变量，lock方法就是进入了 synchronized 块内，await方法就相当于执行wait方法</p>
+<p>理解了 条件变量后</p>
+<p>再来看 ConditionObject  这个类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionObject</span> <span class="keyword">implements</span> <span class="title">Condition</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 和AQS一样，维护着一个条件队列，不是AQS的双向队列</span></span><br><span class="line">    <span class="comment">// 用来存放调用await阻塞的线程</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Node firstWaiter;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Node lastWaiter;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (Thread.interrupted()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 创建一个类型为 CONDITION 类型的Node 节点,将其放入条件队列末尾</span></span><br><span class="line">        Node node = addConditionWaiter();</span><br><span class="line">        <span class="comment">// 释放锁</span></span><br><span class="line">        <span class="keyword">int</span> savedState = fullyRelease(node);</span><br><span class="line">        <span class="keyword">int</span> interruptMode = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 调用 park 阻塞 当前线程</span></span><br><span class="line">        <span class="keyword">while</span> (!isOnSyncQueue(node)) &#123;</span><br><span class="line">            LockSupport.park(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">if</span> ((interruptMode = checkInterruptWhileWaiting(node)) != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> Node <span class="title">addConditionWaiter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 拿到最后一个结点</span></span><br><span class="line">        Node t = lastWaiter;</span><br><span class="line">        <span class="comment">// 如果最后一个节点被取消了，请清理.</span></span><br><span class="line">        <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; t.waitStatus != Node.CONDITION) &#123;</span><br><span class="line">            unlinkCancelledWaiters();</span><br><span class="line">            t = lastWaiter;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 先创建结点</span></span><br><span class="line">        Node node = <span class="keyword">new</span> Node(Thread.currentThread(), Node.CONDITION);</span><br><span class="line">        <span class="keyword">if</span> (t == <span class="keyword">null</span>)</span><br><span class="line">            <span class="comment">// 最后一个结点为空，则让其成为第一个</span></span><br><span class="line">            firstWaiter = node;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="comment">// 最后一个结点不为空，则让其下一个成为最后一个</span></span><br><span class="line">            t.nextWaiter = node;</span><br><span class="line">        lastWaiter = node;</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!isHeldExclusively())</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</span><br><span class="line">        Node first = firstWaiter;</span><br><span class="line">        <span class="keyword">if</span> (first != <span class="keyword">null</span>)</span><br><span class="line">            <span class="comment">// 将条件对列头元素移动到AQS队列</span></span><br><span class="line">            doSignal(first);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>大概认识了AQS的结构分析后</p>
+<p>了解到</p>
+<p>1，当多个线程调用lock.lock()方法时，只会有一个线程拿的到锁，其他的线程会转换为Node进入AQS阻塞队列中，并做CAS自旋尝试获取锁</p>
+<p>2，当拿到锁的线程调用condition.await方法时，会释放锁，并转换成 Node 节点进入对应的条件变量的 条件队列中</p>
+<p>3，这个时候因为调用lock.lock方法而进入阻塞队列的线程中会有一个拿到锁，然后去获取资源</p>
+<p>4，当了另一个线程调用条件变量的signal方法时，就会把该条件变量中的条件队列里的一个或者全部Node结点移动到AQS阻塞队列中</p>
+<blockquote>
+<p>了解其结构，也就是理解其核心思想，了解其运作原理</p>
+</blockquote>
+<h2 id="资源的获取与释放"><a href="#资源的获取与释放" class="headerlink" title="资源的获取与释放"></a>资源的获取与释放</h2><p>前面有提到AQS同步的关键在于，state值的操作</p>
+<p>分两种方式：独占/共享</p>
+<h3 id="独占方式流程"><a href="#独占方式流程" class="headerlink" title="独占方式流程"></a>独占方式流程</h3><p>获取独占资源</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 以独占模式获取(资源)，忽略中断</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 尝试获取资源，具体就是设置状态 state</span></span><br><span class="line">    <span class="keyword">if</span> (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">            <span class="comment">// 如果失败了就会去创建一个EXCLUSIVE的Node结点，插入AQS阻塞队列</span></span><br><span class="line">        acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) &#123;</span><br><span class="line">        selfInterrupt();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>1，首先调用tryAcquire方法，调用此方法的线程会试图在独占模式下获取对象状态。此方法应该查询是否允许它在独占模式下获取对象状态，如果允许，则获取它。在AbstractQueuedSynchronizer源码中默认会抛出一个异常，即需要子类去重写此方法完成自己的逻辑</p>
+<p>2，若tryAcquire失败，则调用addWaiter方法，addWaiter方法完成的功能是将调用此方法的线程封装成为一个结点并放入Sync queue。</p>
+<p>3，调用acquireQueued方法，此方法完成的功能是Sync queue中的结点不断尝试获取资源，若成功，则返回true，否则，返回false。</p>
+<p>4，由于tryAcquire默认实现是抛出异常。</p>
+<p>释放独占资源</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">release</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 尝试释放资源，也就是设置state值</span></span><br><span class="line">    <span class="keyword">if</span> (tryRelease(arg)) &#123;</span><br><span class="line">        Node h = head;</span><br><span class="line">        <span class="comment">// 释放成功就调用 unpark 方法，唤醒 AQS 阻塞队列中的一个线程</span></span><br><span class="line">        <span class="keyword">if</span> (h != <span class="keyword">null</span> &amp;&amp; h.waitStatus != <span class="number">0</span>)</span><br><span class="line">            unparkSuccessor(h);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>注意</p>
+<p>我们都知道，同步是建立在对state的值操作上，修改的操作都在 <code>tryRelease</code>和<code>tryAcquire</code>方法中进行，但是AQS没有提供，其实需要具体的子类来实现</p>
+<p>state 的修改都是使用 CAS 算法尝试修改的</p>
+<h3 id="共享方式流程"><a href="#共享方式流程" class="headerlink" title="共享方式流程"></a>共享方式流程</h3><p>获取共享资源</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquireShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tryAcquireShared(arg) &lt; <span class="number">0</span>)</span><br><span class="line">        doAcquireShared(arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>释放共享资源</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">releaseShared</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tryReleaseShared(arg)) &#123;</span><br><span class="line">        <span class="comment">// 成功则唤醒AQS阻塞队列中的一个线程，被唤醒的会查看当前状态变量 state 是否满足要去，满足继续执行，不满足则挂起</span></span><br><span class="line">        doReleaseShared();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>注意</p>
+<p><code>tryAcquireShared</code> <code>tryReleaseShared</code> AQS也没有提供</p>
+<h3 id="Interruptibly关键字"><a href="#Interruptibly关键字" class="headerlink" title="Interruptibly关键字"></a>Interruptibly关键字</h3><p>独占模式下，对应额方法中还有些方法带Interruptibly的，带这个关键字说明会对打断进行响应</p>
+<h3 id="两模式的区别"><a href="#两模式的区别" class="headerlink" title="两模式的区别"></a>两模式的区别</h3><p>1， 独占模式即当锁被某个线程成功获取时，其他线程无法获取到该锁，共享模式即当锁被某个线程成功获取时，其他线程仍然可能获取到该锁。</p>
+<p>独占：同一时间只有一个线程能拿到锁执行，锁的状态只有0和1两种情况。</p>
+<p>共享： 同一时间有多个线程可以拿到锁协同工作，锁的状态大于或等于0。</p>
+<blockquote>
+<p>要想研究具体怎么执行，需要找到具体的子类实现，因为AQS没有提供对应的方法</p>
+</blockquote>
+<h2 id="AQS入队操作"><a href="#AQS入队操作" class="headerlink" title="AQS入队操作"></a>AQS入队操作</h2><p>讲解了两个模式中的资源的获取与实现，都涉及到AQS阻塞队列的入队操作，拿不到资源的时候，都是被纳入阻塞队列中</p>
+<p>那么入队是怎么执行的呢？</p>
+<p>走读源码发现，最终发现入队操作在 <code>enq</code> 方法中执行</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">enq</span><span class="params">(<span class="keyword">final</span> Node node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="comment">// 指向 尾部结点</span></span><br><span class="line">        Node t = tail;</span><br><span class="line">        <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123; <span class="comment">// Must initialize</span></span><br><span class="line">            <span class="comment">// 如果为null，则使用CAS 设置 一个哨兵结点 为 头结点</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetHead(<span class="keyword">new</span> Node()))</span><br><span class="line">                <span class="comment">// 然后将尾结点也指向头结点，设置完后进入下一个循环</span></span><br><span class="line">                tail = head;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 前驱结点 设置为 尾结点</span></span><br><span class="line">            node.prev = t;</span><br><span class="line">            <span class="comment">// CAS  设置 尾结点为 node</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetTail(t, node)) &#123;</span><br><span class="line">                <span class="comment">// 这个时候t就在node 的前一个</span></span><br><span class="line">                t.next = node;</span><br><span class="line">                <span class="keyword">return</span> t;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="AbstractQueuedSynchronizer有哪些锁的实现"><a href="#AbstractQueuedSynchronizer有哪些锁的实现" class="headerlink" title="AbstractQueuedSynchronizer有哪些锁的实现"></a>AbstractQueuedSynchronizer有哪些锁的实现</h2><p>常见的有 ReentrantReadWriteLock、ReentrantLock</p>
+<p>打开源码，展开AbstractQueuedSynchronizer 的 子类，都是 Sync内部类 来继承实现的，并不是由ReentrantLock等这些类直接实现</p>
+<p>总结</p>
+<p>分析下来，感觉AQS围绕着其阻塞队列而运行着的，什么时候进阻塞队列，什么时候进条件队列，激活条件，什么时候激活，什么时候阻塞</p>
+<p>也就是AQS对于同步的控制</p>
+]]></content>
+  </entry>
+  <entry>
     <title>ThreadLocal的使用</title>
     <url>/2021/10/27/hreadLocal%E7%9A%84%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h1 id="ThreadLocal的使用"><a href="#ThreadLocal的使用" class="headerlink" title="ThreadLocal的使用"></a>ThreadLocal的使用</h1><ul>
